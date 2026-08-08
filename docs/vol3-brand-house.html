@@ -1,0 +1,509 @@
+<title>Vol.3 レーベル型 ── 主催者が独立できるサークルの設計</title>
+<style>
+:root {
+  --ground: #F7F8FA; --surface: #FFFFFF; --surface-2: #EDEFF5;
+  --line: #DBDEE8; --line-soft: #E7E9F1;
+  --ink: #14161C; --ink-2: #4C5265; --ink-3: #767D91;
+  --accent: #2F4796; --accent-ink: #2F4796; --accent-soft: #E7EBF8;
+  --alert: #AE3822; --alert-soft: #FAE9E4;
+  --safe: #376E51; --safe-soft: #E4EFE8;
+  --shadow: 0 1px 2px rgba(20,22,28,.05), 0 8px 24px -16px rgba(20,22,28,.25);
+  --font-display: "Hiragino Mincho ProN", "Yu Mincho", YuMincho, "Noto Serif JP", "Times New Roman", serif;
+  --font-body: "Hiragino Sans", "Yu Gothic", YuGothic, "Noto Sans JP", system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --step--1: 0.8125rem; --step-0: 1rem; --step-1: 1.1875rem;
+  --step-2: 1.4375rem; --step-3: 1.875rem; --step-4: 2.5rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #101219; --surface: #171A22; --surface-2: #1E2230;
+    --line: #2C3140; --line-soft: #242938;
+    --ink: #E7E9F0; --ink-2: #A2A9BB; --ink-3: #7B8298;
+    --accent: #94A8E9; --accent-ink: #A9B9EE; --accent-soft: #1C2540;
+    --alert: #E59680; --alert-soft: #37211D;
+    --safe: #8DBCA1; --safe-soft: #1B2C22;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #101219; --surface: #171A22; --surface-2: #1E2230;
+  --line: #2C3140; --line-soft: #242938;
+  --ink: #E7E9F0; --ink-2: #A2A9BB; --ink-3: #7B8298;
+  --accent: #94A8E9; --accent-ink: #A9B9EE; --accent-soft: #1C2540;
+  --alert: #E59680; --alert-soft: #37211D;
+  --safe: #8DBCA1; --safe-soft: #1B2C22;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--ground); color: var(--ink);
+  font-family: var(--font-body); font-size: var(--step-0); line-height: 1.85;
+  -webkit-font-smoothing: antialiased; text-size-adjust: 100%;
+}
+.wrap {
+  max-width: 50rem; margin: 0 auto;
+  padding: clamp(2rem,5vw,4.5rem) clamp(1.1rem,4vw,2rem) 6rem;
+  display: flex; flex-direction: column; gap: clamp(2.75rem,6vw,4rem);
+}
+.masthead { display: flex; flex-direction: column; gap: 1.1rem; }
+.eyebrow {
+  font-family: var(--font-mono); font-size: var(--step--1);
+  letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3); margin: 0;
+}
+.masthead h1 {
+  font-family: var(--font-display); font-size: clamp(1.9rem,6vw,var(--step-4));
+  font-weight: 600; line-height: 1.3; letter-spacing: .01em; margin: 0; text-wrap: balance;
+}
+.lede { margin: 0; font-size: var(--step-1); line-height: 1.9; color: var(--ink-2); max-width: 40em; }
+
+.toc { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--line); padding: 1rem 0 1.2rem; }
+.toc ol {
+  list-style: none; margin: .6rem 0 0; padding: 0;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem,1fr)); gap: .35rem 2rem;
+}
+.toc a {
+  color: var(--ink); text-decoration: none; font-size: var(--step--1);
+  display: flex; gap: .6rem; padding: .15rem 0; border-bottom: 1px solid transparent;
+}
+.toc a:hover { border-bottom-color: var(--accent); color: var(--accent-ink); }
+.toc a span { font-family: var(--font-mono); color: var(--ink-3); }
+
+section { display: flex; flex-direction: column; gap: 1.4rem; scroll-margin-top: 1.5rem; }
+.part-head { display: flex; flex-direction: column; gap: .5rem; }
+.part-head .kicker {
+  font-family: var(--font-mono); font-size: .6875rem; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--accent-ink);
+}
+h2 {
+  font-family: var(--font-display); font-size: clamp(1.5rem,4.4vw,var(--step-3));
+  font-weight: 600; line-height: 1.4; margin: 0; text-wrap: balance;
+}
+.part-head p { margin: 0; color: var(--ink-2); font-size: var(--step--1); line-height: 1.85; }
+h3 { font-family: var(--font-display); font-size: var(--step-2); font-weight: 600; line-height: 1.5; margin: 0; text-wrap: balance; }
+p.body { margin: 0; font-size: var(--step--1); color: var(--ink-2); line-height: 1.9; }
+p.body strong { color: var(--ink); }
+
+.note {
+  border-left: 3px solid var(--accent); background: var(--accent-soft);
+  padding: .9rem 1.1rem; border-radius: 0 4px 4px 0;
+  font-size: var(--step--1); line-height: 1.85;
+}
+.note.warn { border-left-color: var(--alert); background: var(--alert-soft); }
+.note.ok { border-left-color: var(--safe); background: var(--safe-soft); }
+.note p { margin: 0; }
+.note p + p { margin-top: .6rem; }
+.note ul { margin: .5rem 0 0; padding-left: 1.15rem; }
+.note li + li { margin-top: .25rem; }
+.note .label {
+  display: block; font-family: var(--font-mono); font-size: .6875rem;
+  letter-spacing: .14em; text-transform: uppercase; margin-bottom: .3rem; color: var(--accent-ink);
+}
+.note.warn .label { color: var(--alert); }
+.note.ok .label { color: var(--safe); }
+
+.scroller { overflow-x: auto; border: 1px solid var(--line); border-radius: 5px; }
+table { border-collapse: collapse; width: 100%; min-width: 34rem; font-size: var(--step--1); background: var(--surface); }
+th, td { text-align: left; padding: .7rem .85rem; border-bottom: 1px solid var(--line-soft); vertical-align: top; line-height: 1.7; }
+th { font-weight: 700; color: var(--ink); border-bottom: 1px solid var(--line); background: var(--surface-2); white-space: nowrap; }
+td { color: var(--ink-2); }
+td strong { color: var(--ink); font-weight: 700; }
+tbody tr:last-child td { border-bottom: 0; }
+.num-cell { font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* ladder */
+.ladder { display: flex; flex-direction: column; gap: .7rem; margin: 0; padding: 0; list-style: none; }
+.ladder > li {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 5px;
+  box-shadow: var(--shadow); overflow: hidden;
+}
+.ladder > li.now { border-color: var(--accent); border-width: 1.5px; }
+.ladder .lv-head {
+  display: flex; align-items: baseline; gap: .8rem; flex-wrap: wrap;
+  padding: .85rem 1.2rem; background: var(--surface-2); border-bottom: 1px solid var(--line-soft);
+}
+.ladder .lv {
+  font-family: var(--font-mono); font-size: .75rem; font-weight: 700;
+  color: var(--accent-ink); background: var(--accent-soft);
+  padding: .15rem .5rem; border-radius: 3px; flex: none;
+}
+.ladder h4 { margin: 0; font-size: var(--step-1); font-weight: 700; line-height: 1.5; }
+.ladder .money {
+  font-family: var(--font-mono); font-size: .6875rem; color: var(--ink-2);
+  margin-left: auto; white-space: nowrap;
+}
+.ladder .lv-body { padding: .95rem 1.2rem; display: flex; flex-direction: column; gap: .5rem; }
+.ladder p { margin: 0; font-size: var(--step--1); line-height: 1.8; color: var(--ink-2); }
+.ladder p strong { color: var(--ink); }
+.ladder .cond {
+  font-size: var(--step--1); line-height: 1.8; padding: .5rem .75rem;
+  background: var(--surface-2); border-radius: 4px; color: var(--ink-2);
+}
+.ladder .cond b { color: var(--ink); font-family: var(--font-mono); font-size: .6875rem; letter-spacing: .1em; text-transform: uppercase; display: block; margin-bottom: .15rem; color: var(--ink-3); }
+
+.pill {
+  font-family: var(--font-mono); font-size: .6875rem; font-weight: 700; letter-spacing: .08em;
+  padding: .15rem .5rem; border-radius: 999px; flex: none; white-space: nowrap;
+}
+.pill.green { color: var(--safe); background: var(--safe-soft); border: 1px solid color-mix(in srgb, var(--safe) 30%, transparent); }
+.pill.red { color: var(--alert); background: var(--alert-soft); border: 1px solid color-mix(in srgb, var(--alert) 30%, transparent); }
+
+/* flow compare */
+.compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem,1fr)); gap: 1rem; }
+.flow {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 5px;
+  padding: 1rem 1.2rem; display: flex; flex-direction: column; gap: .6rem;
+}
+.flow.bad { border-color: color-mix(in srgb, var(--alert) 40%, var(--line)); }
+.flow.good { border-color: color-mix(in srgb, var(--safe) 45%, var(--line)); }
+.flow h4 { margin: 0; font-size: var(--step-0); font-weight: 700; line-height: 1.5; display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+.flow pre {
+  margin: 0; font-family: var(--font-mono); font-size: .75rem; line-height: 1.9;
+  color: var(--ink-2); background: var(--surface-2); border-radius: 4px; padding: .6rem .75rem; overflow-x: auto;
+}
+.flow p { margin: 0; font-size: var(--step--1); line-height: 1.8; color: var(--ink-2); }
+.flow p strong { color: var(--ink); }
+
+/* revenue */
+.rev { display: flex; flex-direction: column; gap: .6rem; }
+.rev > div {
+  display: grid; grid-template-columns: 3.5rem 1fr; gap: 0 1rem;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 5px; padding: .95rem 1.2rem;
+}
+.rev .idx { font-family: var(--font-mono); font-size: .75rem; font-weight: 700; color: var(--accent-ink); padding-top: .1rem; }
+.rev .rb { display: flex; flex-direction: column; gap: .3rem; }
+.rev h4 { margin: 0; font-size: var(--step-0); font-weight: 700; line-height: 1.6; }
+.rev p { margin: 0; font-size: var(--step--1); color: var(--ink-2); line-height: 1.8; }
+.rev p strong { color: var(--ink); }
+
+.road { display: flex; flex-direction: column; gap: 0; margin: 0; padding: 0; }
+.road > li { list-style: none; display: grid; grid-template-columns: 3.4rem 1fr; gap: 0 1rem; }
+.road .marker { position: relative; display: flex; justify-content: center; }
+.road .marker span {
+  font-family: var(--font-mono); font-size: .75rem; font-weight: 700;
+  color: var(--surface); background: var(--accent);
+  width: 2rem; height: 2rem; border-radius: 999px;
+  display: grid; place-content: center; margin-top: .35rem; z-index: 1;
+}
+.road .marker::before { content: ""; position: absolute; top: 0; bottom: 0; width: 1px; background: var(--line); }
+.road > li:first-child .marker::before { top: 1.35rem; }
+.road > li:last-child .marker::before { bottom: auto; height: 1.35rem; }
+.road .body { padding-bottom: 1.8rem; display: flex; flex-direction: column; gap: .45rem; }
+.road h4 { margin: 0; font-size: var(--step-1); font-weight: 700; line-height: 1.6; }
+.road .when { font-family: var(--font-mono); font-size: .6875rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+.road ul { margin: 0; padding-left: 1.15rem; font-size: var(--step--1); line-height: 1.8; color: var(--ink-2); }
+.road li + li { margin-top: .25rem; }
+
+footer {
+  border-top: 1px solid var(--line); padding-top: 1.5rem;
+  font-size: var(--step--1); color: var(--ink-3); line-height: 1.85;
+}
+footer p { margin: 0; }
+footer p + p { margin-top: .5rem; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Independent Circle · Vol.3</p>
+    <h1>レーベル型 ──<br>主催者が独立できるサークルの設計</h1>
+    <p class="lede">1000人の実績と青色申告がある前提で、Vol.1・Vol.2 を書き換えます。「自分も利益を得たい」と「主催してくれた人が独立できるようにしたい」は矛盾しません。それどころか、その形にすると<strong>分配より法的に安全な構造</strong>が取れます。</p>
+  </header>
+
+  <nav class="toc" aria-label="目次">
+    <p class="eyebrow">Contents</p>
+    <ol>
+      <li><a href="#s1"><span>01</span>前提の更新 ── 今どこにいるか</a></li>
+      <li><a href="#s2"><span>02</span>目指す形は「レーベル型」</a></li>
+      <li><a href="#s3"><span>03</span>独立までの4段の階段</a></li>
+      <li><a href="#s4"><span>04</span>お金の設計 ── 本体の収入3本</a></li>
+      <li><a href="#s5"><span>05</span>構造の要 ── 誰が集金するか</a></li>
+      <li><a href="#s6"><span>06</span>法的な注意点</a></li>
+      <li><a href="#s7"><span>07</span>最大の経営課題</a></li>
+      <li><a href="#s8"><span>08</span>次の90日</a></li>
+    </ol>
+  </nav>
+
+  <!-- 01 -->
+  <section id="s1">
+    <div class="part-head">
+      <p class="kicker">Section 01</p>
+      <h2>前提の更新</h2>
+    </div>
+    <div class="note ok">
+      <span class="label">完了しているもの</span>
+      <p>Vol.1・Vol.2 で「まずやること」として書いた項目は、すでに終わっています。</p>
+      <ul>
+        <li><strong>1000人規模の開催実績</strong>＝ 需要の検証も、形式の再現性も証明済み。「まず10回開く」は完了</li>
+        <li><strong>青色申告済み</strong>＝ 個人事業主としての器はもう整っている。Vol.2 のフェーズ2は完了</li>
+        <li><strong>集客チャネルが機能している</strong>＝ ゼロから募集を作る段階ではない</li>
+      </ul>
+      <p>つまり<strong>立ち上げ期ではなく、組織化フェーズの入口</strong>にいます。Vol.1 の90日ロードマップと、Vol.2 のフェーズ1〜2は読み飛ばしてください。</p>
+    </div>
+    <p class="body">残っている課題は3つに絞られます。<strong>①主催者を育てて増やす仕組み、②その人たちとのお金の設計、③つなげーと依存からの脱却。</strong>以降はこの3つだけを扱います。</p>
+  </section>
+
+  <!-- 02 -->
+  <section id="s2">
+    <div class="part-head">
+      <p class="kicker">Section 02</p>
+      <h2>目指す形は「レーベル型」</h2>
+      <p>「同じサークルの中で、自分のブランドも掲げられる」「いずれ独立できる」── これは音楽レーベルや美容室ののれん分けと同じ構造で、<strong>ハウス・オブ・ブランズ</strong>と呼ばれる形です。</p>
+    </div>
+
+    <p class="body">親ブランドの下に、各主催者のサブブランドがぶら下がります。<strong>「〈サークル名〉presents ◯◯の会」</strong>のような掲げ方です。参加者から見れば同じサークルの企画、主催者から見れば自分の看板。そして本体は、ブランドと集客基盤とノウハウを提供するプラットフォームになります。</p>
+
+    <div class="note ok">
+      <span class="label">この形が優れている理由</span>
+      <p>Vol.2 の C型（利益分配）では、<strong>本体が主催者に「払う」</strong>構造でした。だから雇用と評価されないよう気を配る必要があった。</p>
+      <p>レーベル型では逆転します。<strong>各主催者が自分の名義で開催し、売上は主催者のもの。本体はブランド使用料・プラットフォーム利用料を「受け取る」側になります。</strong>本体から主催者へのお金の流れが存在しないので、給与認定のリスクが構造ごと消えます。指揮命令の問題も起きません。むしろ本体は主催者に対して「サービスを提供する側」です。</p>
+      <p>そして何より、<strong>あなたの理念（独立できる体制）と、法的な安全性と、収益のスケールが同じ方向を向きます。</strong>主催者が伸びるほど本体の手数料収入も伸びる。理念のために利益を諦める必要がありません。</p>
+    </div>
+  </section>
+
+  <!-- 03 -->
+  <section id="s3">
+    <div class="part-head">
+      <p class="kicker">Section 03</p>
+      <h2>独立までの4段の階段</h2>
+      <p>「独立できる体制」の実体はこれです。<strong>昇格条件を明文化することが最も重要</strong>で、これがないと「なぜあの人だけ」が必ず起きます。</p>
+    </div>
+
+    <ul class="ladder">
+      <li>
+        <div class="lv-head"><span class="lv">LV.1</span><h4>当日サポート</h4><span class="money">無報酬＋参加費免除</span></div>
+        <div class="lv-body">
+          <p>受付・ファシリなど、当日だけ完結する役割。本体の企画を手伝う立場です。<strong>金銭の報酬は出さず、参加費免除と当日の飲食代・交通費の実費負担まで</strong>に留めます（Vol.1 の A型）。ここで金銭を渡し始めると雇用の議論に入るので、線を引いておきます。</p>
+          <div class="cond"><b>昇格条件</b>3回以上サポートに入り、初参加の人に自分から話しかけている。運営の判断ではなく<strong>行動で見る</strong>。</div>
+        </div>
+      </li>
+      <li>
+        <div class="lv-head"><span class="lv">LV.2</span><h4>共同主催</h4><span class="money">粗利シェア</span></div>
+        <div class="lv-body">
+          <p>本体の企画で主担当を持ちます。企画・会場手配・募集文まで自分で書く。まだブランドは本体のもので、<strong>売上も本体に立ち、粗利を役割に応じて分配</strong>します（Vol.2 の C型・役割ベース）。ここは<strong>練習台であって、長く置く段ではありません</strong>。1〜3回で次に上げます。</p>
+          <div class="cond"><b>昇格条件</b>主担当で2回開催し、いずれも定員の7割以上を集めた。振り返りを自分で書けている。</div>
+        </div>
+      </li>
+      <li>
+        <div class="lv-head"><span class="lv">LV.3</span><h4>レーベル主催</h4><span class="money">自分の売上 − 本体手数料</span></div>
+        <div class="lv-body">
+          <p><strong>ここが「自分のブランドを掲げる」段です。</strong>「〈サークル名〉presents ◯◯の会」として、自分の名義で募集し、自分で集金し、会場費も自分で払う。売上はその人のもの。本体には<strong>ブランド使用料・プラットフォーム利用料</strong>を支払います。</p>
+          <p>本体が提供するのは、ブランド、集客導線（SNS・媒体・メンバーシップ）、会場台帳、募集文と台本のテンプレ、保険、トラブル対応のバックアップ。<strong>手数料はこれらの対価</strong>であり、労務の対価ではありません。</p>
+          <div class="cond"><b>昇格条件</b>Lv.2 の条件を満たし、自分でやりたい企画がある。開業届を出す意思がある（年間所得が20万円を超える見込みなら申告が必要になるため）。</div>
+        </div>
+      </li>
+      <li>
+        <div class="lv-head"><span class="lv">LV.4</span><h4>独立（のれん分け）</h4><span class="money">卒業 or ライセンス継続</span></div>
+        <div class="lv-body">
+          <p>自分のサークルとして分離します。選択肢は2つ。<strong>①完全に卒業してブランドを外す</strong>、<strong>②ブランド使用を継続してライセンス料を払い続ける</strong>。②なら本体には継続収入が残り、独立した側には集客基盤が残ります。どちらを選んでもよい形にしておくのが、この階段の肝です。</p>
+          <div class="cond"><b>移行条件</b>Lv.3 で通算10回以上開催し、自分の集客で定員を埋められている。<strong>競業避止義務は課さない</strong>（後述）。</div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="note">
+      <p><strong>各段に「いつまでに次へ」の目安を置いてください。</strong>Lv.1 に何年もいる人が出ると、階段ではなく身分になります。Lv.1 は半年、Lv.2 は3回まで、を目安に。上がる気がない人はそれでよく、無理に上げる必要はありません。ただし<strong>上がれる道が見えていることと、実際に上がった人が一人でもいることが、この仕組みの信用のすべて</strong>です。</p>
+    </div>
+  </section>
+
+  <!-- 04 -->
+  <section id="s4">
+    <div class="part-head">
+      <p class="kicker">Section 04</p>
+      <h2>お金の設計 ── 本体の収入3本</h2>
+      <p>「自分ももらいたい」への回答です。レーベル型にすると、本体の収入が3本立ちます。</p>
+    </div>
+
+    <div class="rev">
+      <div>
+        <div class="idx">01</div>
+        <div class="rb">
+          <h4>自分が主催する回の粗利</h4>
+          <p>直接収入。これは今もあるもの。ただし<strong>自分の稼働時間に完全に比例するので、ここは増やさない方向</strong>で設計します。主催者が育つほど、あなたは自分の開催数を減らせます。</p>
+        </div>
+      </div>
+      <div>
+        <div class="idx">02</div>
+        <div class="rb">
+          <h4>Lv.3 主催者からの手数料 ── スケールする収入</h4>
+          <p><strong>粗利の10〜20%</strong>が妥当なレンジです。取りすぎると独立の意欲を削ぎ、安すぎると本体が回りません。おすすめは<strong>逓減方式</strong>：Lv.3 開始時は20%、通算10回を超えたら15%、独立準備段階で10%。<strong>伸びた主催者ほど率が下がる</strong>ので、「搾取されている」感が生まれず、理念とも整合します。</p>
+        </div>
+      </div>
+      <div>
+        <div class="idx">03</div>
+        <div class="rb">
+          <h4>横断メンバーシップ ── ここが本命</h4>
+          <p><strong>1000人のリーチがある時点で、これは今すぐ狙えます。</strong>月額500〜1,500円で、全レーベルのイベントに優先予約・割引が効く形。5%が入れば月5万円、10%で月10万円。開催の有無に関係なく入り、しかも<strong>各レーベルの集客力を高めるので、主催者にとっても得</strong>になります。本体だけが儲かる仕組みにしないことが、長く続く条件です。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroller">
+      <table>
+        <thead><tr><th>試算</th><th class="num-cell">現在</th><th class="num-cell">Lv.3 が3人育った状態</th></tr></thead>
+        <tbody>
+          <tr><td>自分の開催（月2回）</td><td class="num-cell">16,000円</td><td class="num-cell">16,000円</td></tr>
+          <tr><td>手数料（3人 × 月2回 × 粗利3万 × 15%）</td><td class="num-cell">—</td><td class="num-cell">27,000円</td></tr>
+          <tr><td>メンバーシップ（50人 × 1,000円）</td><td class="num-cell">—</td><td class="num-cell">50,000円</td></tr>
+          <tr><td><strong>月間合計</strong></td><td class="num-cell"><strong>16,000円</strong></td><td class="num-cell"><strong>93,000円</strong></td></tr>
+          <tr><td>自分の稼働</td><td class="num-cell">月8時間</td><td class="num-cell">月10時間程度</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="body">数字は仮のものですが、構造は正しいはずです。<strong>稼働をほぼ増やさずに収入が5倍以上になる</strong>のは、02と03が自分の時間に比例しないからです。逆に言えば、01を増やす方向に走ると、この構造は作れません。</p>
+  </section>
+
+  <!-- 05 -->
+  <section id="s5">
+    <div class="part-head">
+      <p class="kicker">Section 05</p>
+      <h2>構造の要 ── 誰が集金するか</h2>
+      <p>ここを間違えると、せっかくのレーベル型が C型に逆戻りします。<strong>この文書で一番実務的に重要な箇所です。</strong></p>
+    </div>
+
+    <div class="compare">
+      <div class="flow bad">
+        <h4><span class="pill red">NG</span>本体が集めて配る</h4>
+        <pre>参加者 → 本体の口座
+        ↓
+      本体 → 主催者へ送金</pre>
+        <p>本体のPeatixアカウントで全部集めたほうが楽ですが、これをやると<strong>「本体 → 主催者への支払い」</strong>が発生します。せっかく消したはずの給与・外注の議論が戻ってきます。本体の売上も膨らみ、税務上も面倒になります。</p>
+      </div>
+      <div class="flow good">
+        <h4><span class="pill green">OK</span>主催者が自分で集める</h4>
+        <pre>参加者 → 主催者の口座
+        ↓
+    主催者 → 本体へ手数料</pre>
+        <p>各主催者が自分の決済アカウントを持ち、自分で集金する。本体には手数料を<strong>支払う</strong>。お金の流れが本体から出ていかないので、<strong>雇用の議論が構造的に成立しません。</strong>各自の売上も明確に分かれます。</p>
+      </div>
+    </div>
+
+    <div class="note">
+      <span class="label">どうしても本体で集めたい場合</span>
+      <p>決済の利便性を優先して本体アカウントで集めるなら、覚書に<strong>「本体は主催者のために参加費を代理受領する（収納代行）」</strong>と明記し、手数料を差し引いた残額を送金する形にします。この場合、本体が受け取った参加費は<strong>本体の売上ではなく預り金</strong>、本体の売上は手数料部分のみです。会計上もそう処理します。</p>
+      <p>ただし<strong>初手は「主催者が自分で集める」を推奨</strong>します。手間は増えますが、Lv.3 の主催者に「これは自分の事業だ」と実感してもらう効果が大きく、独立への階段としても正しい。集金と原価負担を経験していない人は独立できません。</p>
+    </div>
+  </section>
+
+  <!-- 06 -->
+  <section id="s6">
+    <div class="part-head">
+      <p class="kicker">Section 06</p>
+      <h2>法的な注意点</h2>
+      <p>レーベル型はフランチャイズに似た構造なので、そちらの論点を軽く踏みます。重いものはありません。</p>
+    </div>
+
+    <div class="scroller">
+      <table>
+        <thead><tr><th>論点</th><th>結論</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>フランチャイズの<br>情報開示義務</strong></td>
+            <td>中小小売商業振興法の開示義務は小売業・飲食業のフランチャイズが対象。<strong>イベント運営は通常該当しません。</strong>ただし、手数料の水準・提供するもの・解除条件を書面で示すこと自体は、信頼のために必ずやってください。</td>
+          </tr>
+          <tr>
+            <td><strong>独占禁止法</strong></td>
+            <td>業種を問わず適用されうるので、<strong>過度な拘束をかけないこと</strong>。具体的には ①参加費の額を強制しない（推奨価格を示すのは可、指定は不可）②他所での活動を禁止しない ③会場や仕入先を不合理に指定しない。この3つを守れば実務上問題ありません。</td>
+          </tr>
+          <tr>
+            <td><strong>競業避止義務</strong></td>
+            <td><span class="pill red">課さない</span> 独立した主催者に「同種の活動をするな」と課すのは、範囲が広いと無効になりうるうえ、<strong>「独立できる体制」という理念と正面から矛盾します。</strong>禁止すべきはブランド名の無断使用と参加者名簿の持ち出しだけで十分です。</td>
+          </tr>
+          <tr>
+            <td><strong>ブランド名の帰属</strong></td>
+            <td>覚書に<strong>「サークル名およびロゴは本体（代表）に帰属し、使用許諾は本契約の期間中に限る」</strong>と明記。実績が積み上がってきたら<strong>商標登録</strong>も検討に値します（区分にもよりますが数万円規模）。1000人規模なら、名前を守る価値は既にあります。</td>
+          </tr>
+          <tr>
+            <td><strong>インボイス・消費税</strong></td>
+            <td>手数料を受け取る側になるため論点になりますが、<strong>主催者側も課税売上1,000万円以下の免税事業者であれば、当面問題になりません。</strong>相手が課税事業者になった段階で再検討します。</td>
+          </tr>
+          <tr>
+            <td><strong>参加者への責任</strong></td>
+            <td>Lv.3 のイベントで事故があったとき、参加者から見れば「サークルの企画」です。<strong>ブランドを貸す以上、本体も無関係ではいられません。</strong>覚書で一次責任は主催者にあると定めつつ、<strong>イベント保険は本体が一括で手配する</strong>のが現実的です（手数料の対価として説明もつきます）。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note warn">
+      <p>一般的な情報の整理であり、法的助言ではありません。<strong>手数料を実際に受け取り始める前に、覚書の雛形を一度は弁護士に見てもらってください。</strong>商工会議所や自治体の無料相談でも足ります。1000人規模で、金銭のやり取りが複数人に発生する段階なので、ここは費用をかける価値があります。</p>
+    </div>
+  </section>
+
+  <!-- 07 -->
+  <section id="s7">
+    <div class="part-head">
+      <p class="kicker">Section 07</p>
+      <h2>最大の経営課題</h2>
+    </div>
+    <div class="note warn">
+      <span class="label">つなげーと依存</span>
+      <p><strong>1000人という資産が、いま自分の手元にありません。</strong>プラットフォーム側にあります。規約変更、アカウント停止、手数料改定、サービス終了 ── どれか一つで、積み上げたものが一夜で使えなくなります。これはレーベル型を作るうえでも致命的で、<strong>本体が主催者に提供する「集客導線」の実体が、他社のものだから</strong>です。手数料を取る根拠が足元から崩れます。</p>
+      <p>優先度は最上位です。<strong>つなげーとを捨てる必要はまったくなく、そこから自分の側へ受け皿を作ること</strong>が課題です。</p>
+      <ul>
+        <li><strong>LINE公式アカウント</strong> ── 最も現実的。開催後の告知で友だち追加を促す。プッシュが届く点が強い</li>
+        <li><strong>メンバーシップ</strong> ── 収入と名簿を同時に確保できる（Section 04 の03）</li>
+        <li><strong>Instagram・note</strong> ── 検索と回遊。既存の note チームがそのまま使える</li>
+      </ul>
+      <p>目安として、<strong>1年以内に「つなげーと以外からの申込が全体の半分」</strong>を目指してください。ここが達成できていないうちは、法人化もレーベル拡大も土台が不安定です。</p>
+    </div>
+  </section>
+
+  <!-- 08 -->
+  <section id="s8">
+    <div class="part-head">
+      <p class="kicker">Section 08</p>
+      <h2>次の90日</h2>
+      <p>Vol.1 の90日ロードマップを、この前提で置き換えます。</p>
+    </div>
+    <ol class="road">
+      <li>
+        <div class="marker"><span>1</span></div>
+        <div class="body">
+          <p class="when">Month 1 ／ 受け皿</p>
+          <h4>自分の集客導線を作る</h4>
+          <ul>
+            <li>LINE公式アカウントを開設し、既存参加者に案内する導線を毎回の締めに組み込む</li>
+            <li>メンバーシップの設計（価格・特典・プラットフォーム）を決める。まだ開始しなくてよい</li>
+            <li>過去の開催記録を `events/` に遡って整理する ── <strong>Lv.3 候補を探すための元データになる</strong></li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div class="marker"><span>2</span></div>
+        <div class="body">
+          <p class="when">Month 2 ／ 制度</p>
+          <h4>階段と覚書を作り、最初の一人に声をかける</h4>
+          <ul>
+            <li>Lv.1〜4 の昇格条件と手数料率を文書化する（`finance/profit-share.md` を書き換える）</li>
+            <li>覚書の雛形を作り、専門家に一度見てもらう</li>
+            <li><strong>Lv.2 の候補を1人選んで声をかける。</strong>いきなり3人にしない。最初の一人で制度の穴が全部出ます</li>
+            <li>イベント保険を本体で手配する</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div class="marker"><span>3</span></div>
+        <div class="body">
+          <p class="when">Month 3 ／ 実装</p>
+          <h4>Lv.2 で2回まわし、Lv.3 に上げる</h4>
+          <ul>
+            <li>共同主催で2回開催。募集文と台本を本人に書かせ、あなたは添削だけする</li>
+            <li>問題なければ Lv.3 へ。<strong>自分名義の決済アカウントを作ってもらう</strong>ところから始める</li>
+            <li>メンバーシップを開始する</li>
+            <li>1人目が回り始めたら、同じ手順で2人目へ</li>
+          </ul>
+        </div>
+      </li>
+    </ol>
+    <div class="note ok">
+      <p><strong>法人化の検討は、Lv.3 が2〜3人動き出してからで十分です。</strong>そのとき初めて「複数人と継続的に契約を結ぶ主体」としての法人格に意味が出ます。今の段階では、青色申告済みの個人事業主で何ら困りません。</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>Vol.1（決定事項リストと法務メモ）、Vol.2（体制と Claude Code 運用設計）の続編です。1000人規模の開催実績と青色申告済みという前提で、Vol.1 の90日ロードマップと Vol.2 のフェーズ1〜2を置き換えています。</p>
+    <p>法務・税務の記述は一般的な情報の整理であり、法的・税務的助言ではありません。</p>
+  </footer>
+
+</div>
