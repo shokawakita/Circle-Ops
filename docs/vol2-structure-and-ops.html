@@ -1,0 +1,737 @@
+<title>Vol.2 運営体制の選択肢と Claude Code 運用設計</title>
+<style>
+:root {
+  --ground: #F7F8FA;
+  --surface: #FFFFFF;
+  --surface-2: #EDEFF5;
+  --line: #DBDEE8;
+  --line-soft: #E7E9F1;
+  --ink: #14161C;
+  --ink-2: #4C5265;
+  --ink-3: #767D91;
+  --accent: #2F4796;
+  --accent-ink: #2F4796;
+  --accent-soft: #E7EBF8;
+  --alert: #AE3822;
+  --alert-soft: #FAE9E4;
+  --safe: #376E51;
+  --safe-soft: #E4EFE8;
+  --shadow: 0 1px 2px rgba(20, 22, 28, .05), 0 8px 24px -16px rgba(20, 22, 28, .25);
+
+  --font-display: "Hiragino Mincho ProN", "Yu Mincho", YuMincho, "Noto Serif JP", "Times New Roman", serif;
+  --font-body: "Hiragino Sans", "Yu Gothic", YuGothic, "Noto Sans JP", system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --step--1: 0.8125rem;
+  --step-0: 1rem;
+  --step-1: 1.1875rem;
+  --step-2: 1.4375rem;
+  --step-3: 1.875rem;
+  --step-4: 2.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #101219; --surface: #171A22; --surface-2: #1E2230;
+    --line: #2C3140; --line-soft: #242938;
+    --ink: #E7E9F0; --ink-2: #A2A9BB; --ink-3: #7B8298;
+    --accent: #94A8E9; --accent-ink: #A9B9EE; --accent-soft: #1C2540;
+    --alert: #E59680; --alert-soft: #37211D;
+    --safe: #8DBCA1; --safe-soft: #1B2C22;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"] {
+  --ground: #101219; --surface: #171A22; --surface-2: #1E2230;
+  --line: #2C3140; --line-soft: #242938;
+  --ink: #E7E9F0; --ink-2: #A2A9BB; --ink-3: #7B8298;
+  --accent: #94A8E9; --accent-ink: #A9B9EE; --accent-soft: #1C2540;
+  --alert: #E59680; --alert-soft: #37211D;
+  --safe: #8DBCA1; --safe-soft: #1B2C22;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.8);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.85;
+  -webkit-font-smoothing: antialiased;
+  text-size-adjust: 100%;
+}
+
+.wrap {
+  max-width: 50rem;
+  margin: 0 auto;
+  padding: clamp(2rem, 5vw, 4.5rem) clamp(1.1rem, 4vw, 2rem) 6rem;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2.75rem, 6vw, 4rem);
+}
+
+.masthead { display: flex; flex-direction: column; gap: 1.1rem; }
+.eyebrow {
+  font-family: var(--font-mono); font-size: var(--step--1);
+  letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3); margin: 0;
+}
+.masthead h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 6vw, var(--step-4));
+  font-weight: 600; line-height: 1.3; letter-spacing: .01em; margin: 0; text-wrap: balance;
+}
+.lede { margin: 0; font-size: var(--step-1); line-height: 1.9; color: var(--ink-2); max-width: 40em; }
+
+.toc { border-top: 2px solid var(--ink); border-bottom: 1px solid var(--line); padding: 1rem 0 1.2rem; }
+.toc ol {
+  list-style: none; margin: .6rem 0 0; padding: 0;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: .35rem 2rem;
+}
+.toc a {
+  color: var(--ink); text-decoration: none; font-size: var(--step--1);
+  display: flex; gap: .6rem; padding: .15rem 0; border-bottom: 1px solid transparent;
+}
+.toc a:hover { border-bottom-color: var(--accent); color: var(--accent-ink); }
+.toc a span { font-family: var(--font-mono); color: var(--ink-3); }
+
+section { display: flex; flex-direction: column; gap: 1.4rem; scroll-margin-top: 1.5rem; }
+.part-head { display: flex; flex-direction: column; gap: .5rem; }
+.part-head .kicker {
+  font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--accent-ink);
+}
+h2 {
+  font-family: var(--font-display); font-size: clamp(1.5rem, 4.4vw, var(--step-3));
+  font-weight: 600; line-height: 1.4; margin: 0; text-wrap: balance;
+}
+.part-head p { margin: 0; color: var(--ink-2); font-size: var(--step--1); line-height: 1.85; }
+
+h3 {
+  font-family: var(--font-display); font-size: var(--step-2);
+  font-weight: 600; line-height: 1.5; margin: 0; text-wrap: balance;
+}
+
+.note {
+  border-left: 3px solid var(--accent); background: var(--accent-soft);
+  padding: .9rem 1.1rem; border-radius: 0 4px 4px 0;
+  font-size: var(--step--1); line-height: 1.85;
+}
+.note.warn { border-left-color: var(--alert); background: var(--alert-soft); }
+.note.ok { border-left-color: var(--safe); background: var(--safe-soft); }
+.note p { margin: 0; }
+.note p + p { margin-top: .6rem; }
+.note ul { margin: .5rem 0 0; padding-left: 1.15rem; }
+.note li + li { margin-top: .25rem; }
+.note .label {
+  display: block; font-family: var(--font-mono); font-size: 0.6875rem;
+  letter-spacing: .14em; text-transform: uppercase; margin-bottom: .3rem; color: var(--accent-ink);
+}
+.note.warn .label { color: var(--alert); }
+.note.ok .label { color: var(--safe); }
+
+/* option cards */
+.options { display: flex; flex-direction: column; gap: 1.1rem; }
+.opt {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 5px;
+  box-shadow: var(--shadow); overflow: hidden;
+}
+.opt.pick { border-color: var(--accent); border-width: 1.5px; }
+.opt > header {
+  display: flex; align-items: baseline; gap: .75rem; flex-wrap: wrap;
+  padding: 1rem 1.25rem; background: var(--surface-2); border-bottom: 1px solid var(--line-soft);
+}
+.opt > header h4 { margin: 0; font-size: var(--step-1); font-weight: 700; line-height: 1.5; }
+.opt > header .num {
+  font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700;
+  color: var(--ink-3); flex: none;
+}
+.opt .cost {
+  font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: .06em;
+  color: var(--ink-2); margin-left: auto; white-space: nowrap;
+}
+.opt .inner { padding: 1.1rem 1.25rem; display: flex; flex-direction: column; gap: .7rem; }
+.opt p { margin: 0; font-size: var(--step--1); line-height: 1.85; color: var(--ink-2); }
+.opt p strong { color: var(--ink); }
+.opt .pros { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: .6rem 1.4rem; }
+.opt .pros > div { display: flex; flex-direction: column; gap: .2rem; }
+.opt .pros h5 {
+  margin: 0; font-family: var(--font-mono); font-size: 0.6875rem;
+  letter-spacing: .12em; text-transform: uppercase; font-weight: 700;
+}
+.opt .pros .up h5 { color: var(--safe); }
+.opt .pros .down h5 { color: var(--alert); }
+.opt .pros ul { margin: 0; padding-left: 1.05rem; font-size: var(--step--1); line-height: 1.75; color: var(--ink-2); }
+.opt .verdict {
+  font-size: var(--step--1); padding: .6rem .8rem; border-radius: 4px;
+  background: var(--accent-soft); color: var(--ink); line-height: 1.8;
+}
+
+.pill {
+  font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; letter-spacing: .08em;
+  padding: .15rem .5rem; border-radius: 999px; flex: none; white-space: nowrap;
+}
+.pill.green { color: var(--safe); background: var(--safe-soft); border: 1px solid color-mix(in srgb, var(--safe) 30%, transparent); }
+.pill.amber { color: var(--accent-ink); background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); }
+.pill.red { color: var(--alert); background: var(--alert-soft); border: 1px solid color-mix(in srgb, var(--alert) 30%, transparent); }
+.pill.grey { color: var(--ink-3); background: var(--surface-2); border: 1px solid var(--line); }
+
+/* tables */
+.scroller { overflow-x: auto; border: 1px solid var(--line); border-radius: 5px; }
+table { border-collapse: collapse; width: 100%; min-width: 36rem; font-size: var(--step--1); background: var(--surface); }
+th, td { text-align: left; padding: .7rem .85rem; border-bottom: 1px solid var(--line-soft); vertical-align: top; line-height: 1.7; }
+th { font-weight: 700; color: var(--ink); border-bottom: 1px solid var(--line); background: var(--surface-2); white-space: nowrap; }
+td { color: var(--ink-2); }
+td strong { color: var(--ink); font-weight: 700; }
+tbody tr:last-child td { border-bottom: 0; }
+.num-cell { font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* stack / tiers */
+.tiers { display: flex; flex-direction: column; gap: .6rem; }
+.tier {
+  display: grid; grid-template-columns: 5.5rem 1fr; gap: 0 1rem;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 5px; padding: 1rem 1.2rem;
+}
+.tier .t-label { display: flex; flex-direction: column; gap: .1rem; }
+.tier .t-label b { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: .1em; color: var(--accent-ink); }
+.tier .t-label span { font-size: 0.6875rem; color: var(--ink-3); font-family: var(--font-mono); }
+.tier .t-body { display: flex; flex-direction: column; gap: .3rem; }
+.tier h4 { margin: 0; font-size: var(--step-0); font-weight: 700; line-height: 1.6; }
+.tier p { margin: 0; font-size: var(--step--1); color: var(--ink-2); line-height: 1.8; }
+
+/* file tree */
+pre.tree {
+  margin: 0; padding: 1.1rem 1.2rem; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 5px; overflow-x: auto; font-family: var(--font-mono);
+  font-size: 0.75rem; line-height: 1.9; color: var(--ink-2);
+}
+pre.tree b { color: var(--ink); font-weight: 600; }
+pre.tree i { color: var(--ink-3); font-style: normal; }
+
+/* command cards */
+.cmds { display: flex; flex-direction: column; gap: .8rem; }
+.cmd {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 5px;
+  padding: 1rem 1.2rem; display: flex; flex-direction: column; gap: .5rem;
+}
+.cmd .name {
+  font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 700;
+  color: var(--accent-ink); background: var(--accent-soft);
+  padding: .15rem .5rem; border-radius: 3px; align-self: flex-start;
+}
+.cmd h4 { margin: 0; font-size: var(--step-0); font-weight: 700; line-height: 1.6; }
+.cmd p { margin: 0; font-size: var(--step--1); color: var(--ink-2); line-height: 1.8; }
+.cmd ul { margin: 0; padding-left: 1.15rem; font-size: var(--step--1); line-height: 1.8; color: var(--ink-2); }
+.cmd li + li { margin-top: .2rem; }
+.cmd .say {
+  font-family: var(--font-mono); font-size: 0.75rem; line-height: 1.8;
+  background: var(--surface-2); border: 1px solid var(--line-soft);
+  border-radius: 4px; padding: .5rem .7rem; color: var(--ink-2);
+}
+
+/* roadmap reuse */
+.road { display: flex; flex-direction: column; gap: 0; margin: 0; padding: 0; }
+.road > li { list-style: none; display: grid; grid-template-columns: 3.4rem 1fr; gap: 0 1rem; }
+.road .marker { position: relative; display: flex; justify-content: center; }
+.road .marker span {
+  font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700;
+  color: var(--surface); background: var(--accent);
+  width: 2rem; height: 2rem; border-radius: 999px;
+  display: grid; place-content: center; margin-top: .35rem; z-index: 1;
+}
+.road .marker::before { content: ""; position: absolute; top: 0; bottom: 0; width: 1px; background: var(--line); }
+.road > li:first-child .marker::before { top: 1.35rem; }
+.road > li:last-child .marker::before { bottom: auto; height: 1.35rem; }
+.road .body { padding-bottom: 1.8rem; display: flex; flex-direction: column; gap: .45rem; }
+.road h4 { margin: 0; font-size: var(--step-1); font-weight: 700; line-height: 1.6; }
+.road .when {
+  font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--ink-3);
+}
+.road ul { margin: 0; padding-left: 1.15rem; font-size: var(--step--1); line-height: 1.8; color: var(--ink-2); }
+.road li + li { margin-top: .25rem; }
+
+footer {
+  border-top: 1px solid var(--line); padding-top: 1.5rem;
+  font-size: var(--step--1); color: var(--ink-3); line-height: 1.85;
+}
+footer p { margin: 0; }
+footer p + p { margin-top: .5rem; }
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Independent Circle · Vol.2</p>
+    <h1>黒字化する前提での、<br>体制の選び方と運営の自動化</h1>
+    <p class="lede">「利益を出す」と決めた瞬間に、Vol.1 の前提が2つ変わります。運営メンバーへの還元をどう設計するかと、どの器で受けるか。あわせて、Claude Code デスクトップを実務の中心に据える運用設計をまとめました。</p>
+  </header>
+
+  <nav class="toc" aria-label="目次">
+    <p class="eyebrow">Contents</p>
+    <ol>
+      <li><a href="#s1"><span>01</span>先に直すべき前提</a></li>
+      <li><a href="#s2"><span>02</span>体制の選択肢（5つ）</a></li>
+      <li><a href="#s3"><span>03</span>推奨ルートと切り替えライン</a></li>
+      <li><a href="#s4"><span>04</span>黒字化の収益構造と数字</a></li>
+      <li><a href="#s5"><span>05</span>Claude Code 運用設計</a></li>
+      <li><a href="#s6"><span>06</span>導入の順番</a></li>
+    </ol>
+  </nav>
+
+  <!-- 01 -->
+  <section id="s1">
+    <div class="part-head">
+      <p class="kicker">Section 01</p>
+      <h2>先に直すべき前提</h2>
+    </div>
+
+    <div class="note warn">
+      <span class="label">構造の話</span>
+      <p><strong>「無償ボランティアが手伝う」と「主宰者が利益を得る」は、長くは同居しません。</strong>法的には無報酬である限り雇用の問題は起きません（Vol.1 参照）。壊れるのは人間関係のほうです。3ヶ月目くらいに「自分は何のためにやっているんだろう」が必ず来ます。趣味の集まりならそれでも続きますが、あなたの売上が見えている場では続きません。</p>
+      <p>なので<strong>還元の形を、利益が出る前に決めておく</strong>必要があります。後から決めると「利益が出たから分ける」になり、必ずこじれます。</p>
+    </div>
+
+    <h3>運営メンバーへの還元 ── 4つの型</h3>
+    <div class="scroller">
+      <table>
+        <thead>
+          <tr><th>型</th><th>内容</th><th>労働法リスク</th><th>向いている段階</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>A. 現物還元</strong></td>
+            <td>参加費免除＋当日の飲食代・交通費を実費負担。金銭の報酬なし。</td>
+            <td><span class="pill green">なし</span></td>
+            <td>立ち上げ〜月4回程度まで。ここから始める。</td>
+          </tr>
+          <tr>
+            <td><strong>B. 都度の業務委託</strong></td>
+            <td>イベント単位で「今回の受付、5,000円で」と都度合意。回数も金額も固定しない。</td>
+            <td><span class="pill amber">要注意</span></td>
+            <td>月商が安定してから。固定化・定額化すると雇用と評価されうる。</td>
+          </tr>
+          <tr>
+            <td><strong>C. 共同主催／売上シェア</strong></td>
+            <td>各自が自分の企画を持ち、その回の粗利を配分。指揮命令が生じない。</td>
+            <td><span class="pill green">低い</span></td>
+            <td>企画を回せる人が2人以上いる段階。最も健全に伸びる形。</td>
+          </tr>
+          <tr>
+            <td><strong>D. 法人化して内部化</strong></td>
+            <td>合同会社の社員（出資者）や一般社団の理事にして、役員報酬または利益配分。</td>
+            <td><span class="pill grey">別枠</span></td>
+            <td>年商が立ち、共同経営者と呼べる人ができてから。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note">
+      <p><strong>おすすめの進み方は A → C → D。</strong>B は一見ラクですが、「毎回同じ人に同じ金額を払う」に着地しがちで、そこが一番グレーです。C（共同主催）は法的にきれいなだけでなく、企画の幅が勝手に広がるという副次効果があります。カフェ巡りが得意な人、ボドゲに強い人、それぞれに回を持たせる形です。</p>
+    </div>
+  </section>
+
+  <!-- 02 -->
+  <section id="s2">
+    <div class="part-head">
+      <p class="kicker">Section 02</p>
+      <h2>体制の選択肢</h2>
+      <p>日本で取りうる器は実質5つです。コストは登記実費の目安で、司法書士に依頼すると各+5〜10万円かかります。</p>
+    </div>
+
+    <div class="options">
+
+      <div class="opt">
+        <header><span class="num">01</span><h4>任意団体のまま（何もしない）</h4><span class="cost">初期 0円 ／ 維持 0円</span></header>
+        <div class="inner">
+          <p>届出も登記もなし。今の状態です。<strong>売上が小さいうちはこれで完全に合法かつ十分</strong>です。</p>
+          <div class="pros">
+            <div class="up"><h5>Good</h5><ul><li>コストも手間もゼロ</li><li>いつでも始められる／やめられる</li></ul></div>
+            <div class="down"><h5>Bad</h5><ul><li>契約も債務も代表個人に無限責任で帰属</li><li>屋号口座が作りにくく、会計が個人と混ざる</li><li>経費を落とせず、節税の余地がない</li></ul></div>
+          </div>
+          <p class="verdict"><strong>判定：</strong>最初の3〜6ヶ月はこれでいい。ただし「黒字を目指す」なら卒業前提の器。</p>
+        </div>
+      </div>
+
+      <div class="opt pick">
+        <header><span class="num">02</span><h4>個人事業主（開業届＋青色申告）</h4><span class="cost">初期 0円 ／ 維持 0円</span><span class="pill green">まずここ</span></header>
+        <div class="inner">
+          <p>税務署に開業届を出すだけ。<strong>費用ゼロで、黒字化に必要なものがほぼ全部手に入ります。</strong>屋号付き口座が開け、会場費・備品・通信費を経費にでき、青色申告なら最大65万円の所得控除、赤字は3年繰り越せます。</p>
+          <div class="pros">
+            <div class="up"><h5>Good</h5><ul><li>コストゼロで税務上の武器が揃う</li><li>屋号名義の口座・決済が使える</li><li>やめるのも廃業届1枚</li></ul></div>
+            <div class="down"><h5>Bad</h5><ul><li>責任は無限（個人に帰属）</li><li>法人格が要る取引には対応できない</li><li>会社員の場合、住民税経由で勤務先に伝わる可能性がある</li></ul></div>
+          </div>
+          <p class="verdict"><strong>判定：</strong>黒字化を目指すなら、最初にやるべきはこれ一択。<strong>開業から1ヶ月以内に開業届、2ヶ月以内に青色申告承認申請</strong>（期限を逃すと青色はその年使えません）。</p>
+        </div>
+      </div>
+
+      <div class="opt">
+        <header><span class="num">03</span><h4>合同会社（LLC）</h4><span class="cost">初期 約6万円 ／ 維持 年7万円〜</span></header>
+        <div class="inner">
+          <p>登録免許税6万円のみ（定款認証が不要なので株式会社より格段に安い）。1人で設立でき、有限責任。<strong>維持費として、赤字でも法人住民税の均等割が年7万円ほどかかります。</strong></p>
+          <div class="pros">
+            <div class="up"><h5>Good</h5><ul><li>有限責任（個人資産と切り離せる）</li><li>法人契約・請求書・協賛の受け皿になる</li><li>役員報酬や経費で税負担を設計できる</li><li>共同経営者に持分を持たせられる</li></ul></div>
+            <div class="down"><h5>Bad</h5><ul><li>赤字でも年7万円＋会計の手間</li><li>社会保険が原則強制加入（役員報酬を出す場合）</li><li>畳むのにも数万円と手続きがかかる</li></ul></div>
+          </div>
+          <p class="verdict"><strong>判定：</strong>利益が出てから。目安は<strong>課税所得が年800万円前後を超えたら税率面で有利</strong>。ただし金額より「法人でないと取れない話が来たとき」が実際の引き金になることが多い。</p>
+        </div>
+      </div>
+
+      <div class="opt">
+        <header><span class="num">04</span><h4>一般社団法人（非営利型）</h4><span class="cost">初期 約11〜12万円 ／ 維持 年7万円〜</span></header>
+        <div class="inner">
+          <p>設立時に社員2名以上が必要。要件を満たして「非営利型」になると、<strong>収益事業から生じた所得のみが課税対象</strong>となり、会費や寄付の扱いが有利になり得ます。ただし要件は細かく、税理士の確認が実質必須です。</p>
+          <div class="pros">
+            <div class="up"><h5>Good</h5><ul><li>「みんなのコミュニティ」という建て付けにできる</li><li>自治体の助成金・後援に乗りやすい</li><li>公共施設や学校との連携で信用が効く</li></ul></div>
+            <div class="down"><h5>Bad</h5><ul><li>剰余金を自分に配当できない（役員報酬は可）</li><li>社員2名以上・定時社員総会など運営が重い</li><li>非営利型の要件維持に専門家コストがかかる</li></ul></div>
+          </div>
+          <p class="verdict"><strong>判定：</strong>「個人の事業」ではなく「地域のコミュニティ」として育て、行政や企業と組みたくなったときの選択肢。今の段階では重すぎます。</p>
+        </div>
+      </div>
+
+      <div class="opt">
+        <header><span class="num">05</span><h4>株式会社 ／ NPO法人</h4><span class="cost">株式 約20〜25万円 ／ NPO 認証に数ヶ月</span></header>
+        <div class="inner">
+          <p>株式会社は信用度が最も高い一方、設立費用が合同会社の3〜4倍。外部から出資を受ける予定がなければ、サークル事業で選ぶ理由はほぼありません。NPO法人は社員10名以上・所轄庁の認証・毎年の事業報告と、負荷が段違いに重い。</p>
+          <p class="verdict"><strong>判定：</strong>いずれも現時点では検討不要。将来「出資を受ける」「公益活動として補助金で回す」となったときに初めて土俵に乗ります。</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 03 -->
+  <section id="s3">
+    <div class="part-head">
+      <p class="kicker">Section 03</p>
+      <h2>推奨ルートと切り替えライン</h2>
+      <p>結論としては<strong>「任意団体 → 個人事業主 →（必要になったら）合同会社」</strong>の3段階です。最初から法人を作ると、年7万円の均等割と会計の手間が、まだ何も証明されていない事業にのしかかります。</p>
+    </div>
+
+    <ol class="road">
+      <li>
+        <div class="marker"><span>1</span></div>
+        <div class="body">
+          <p class="when">Now → 半年 ／ 任意団体</p>
+          <h4>器は作らず、まず売上と再現性をつくる</h4>
+          <ul>
+            <li>実費割り勘か、粗利の乗った定額会費かを決めて、まず10回開く</li>
+            <li>専用の口座・ウォレットを分け、収支を1行ずつ記録する（＝後で開業届を出すときの根拠になる）</li>
+            <li>この期間の目標は利益額ではなく<strong>「同じ形式を3回まわして、参加者が戻ってくるか」</strong></li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div class="marker"><span>2</span></div>
+        <div class="body">
+          <p class="when">黒字が見えた時点 ／ 個人事業主</p>
+          <h4>開業届を出す（＝実質ここが「組織化」の本番）</h4>
+          <ul>
+            <li>引き金：<strong>月の粗利が安定して出る／年間の所得が20万円を超えそう／経費が増えてきた</strong></li>
+            <li>開業届＋青色申告承認申請を提出。屋号名義の口座を開設</li>
+            <li>会計ソフトを1つ入れる（freee・マネーフォワード等、年1万円前後）</li>
+            <li>運営メンバーへの還元を A（現物）から C（共同主催・売上シェア）へ移行</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div class="marker"><span>3</span></div>
+        <div class="body">
+          <p class="when">引き金が来たら ／ 合同会社</p>
+          <h4>金額より「できないことが出てきたか」で判断する</h4>
+          <ul>
+            <li>課税所得が年800万円前後を超えた（税率面のメリットが出る）</li>
+            <li>企業協賛・法人向けイベント受託など、<strong>法人でないと契約できない話</strong>が来た</li>
+            <li>共同運営者に持分を持たせて、対等な経営体にしたくなった</li>
+            <li>参加人数や企画の規模が大きくなり、<strong>有限責任にしておきたい</strong>と感じた</li>
+          </ul>
+        </div>
+      </li>
+    </ol>
+
+    <div class="note">
+      <span class="label">分岐</span>
+      <p>もし途中で「これは自分の事業ではなく、地域のコミュニティとして育てたい」「行政や学校と組みたい」「助成金を取りたい」と思ったら、そこで<strong>合同会社ではなく一般社団法人（非営利型）</strong>に分岐します。判断軸は税率ではなく、<strong>利益を自分のものにしたいか、団体のものにしたいか</strong>です。ここは早めに自分の中で決めておくと、後の意思決定が全部速くなります。</p>
+    </div>
+
+    <div class="note warn">
+      <span class="label">会社員の場合の注意</span>
+      <p>本業がある場合、<strong>①就業規則の副業規定を先に確認</strong>、<strong>②確定申告時に住民税を「自分で納付」にする</strong>（給与天引きだと住民税額の差で勤務先に把握されうる。ただし完全に防げるわけではありません）、<strong>③法人を作って役員報酬を出すと社会保険の二重加入手続きが発生する</strong> ── の3点を先に潰しておいてください。②③は法人化を先送りする実務的な理由になります。</p>
+    </div>
+  </section>
+
+  <!-- 04 -->
+  <section id="s4">
+    <div class="part-head">
+      <p class="kicker">Section 04</p>
+      <h2>黒字化の収益構造</h2>
+      <p>「参加者に喜んでもらった上で利益を出す」ためには、<strong>単発イベントの参加費だけで稼ごうとしないこと</strong>が肝心です。参加費を上げると、喜んでもらうことと利益が正面から対立します。</p>
+    </div>
+
+    <h3>まず単発イベントの現実的な数字</h3>
+    <div class="scroller">
+      <table>
+        <thead>
+          <tr><th>項目</th><th class="num-cell">ボードゲーム会</th><th class="num-cell">特別企画（貸切）</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>参加者</td><td class="num-cell">10名</td><td class="num-cell">20名</td></tr>
+          <tr><td>参加費</td><td class="num-cell">2,000円</td><td class="num-cell">4,000円</td></tr>
+          <tr><td>売上</td><td class="num-cell">20,000円</td><td class="num-cell">80,000円</td></tr>
+          <tr><td>会場・原価</td><td class="num-cell">−12,000円</td><td class="num-cell">−55,000円</td></tr>
+          <tr><td><strong>粗利</strong></td><td class="num-cell"><strong>8,000円</strong></td><td class="num-cell"><strong>25,000円</strong></td></tr>
+          <tr><td>運営工数</td><td class="num-cell">約4時間</td><td class="num-cell">約12時間</td></tr>
+          <tr><td>時間あたり</td><td class="num-cell">2,000円</td><td class="num-cell">2,080円</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note warn">
+      <p><strong>ここが構造的な問題です。</strong>月4回まわしても粗利は3〜5万円で、工数は20時間近い。参加費を3,000円に上げれば粗利は倍ですが、「気軽に来られる場」というコンセプトが崩れます。<strong>単発参加費は事業の土台であって、利益の源泉にはできない。</strong>だから3階建てにします。</p>
+    </div>
+
+    <h3>収益の3階建て</h3>
+    <div class="tiers">
+      <div class="tier">
+        <div class="t-label"><b>1F</b><span>FLOW</span></div>
+        <div class="t-body">
+          <h4>単発イベントの参加費 ── 入口であり、信頼をつくる場</h4>
+          <p>粗利率30〜40%を目安に、原価に対して無理のない価格をつける。ここは<strong>利益を取りに行かず、体験の質に全振り</strong>する。ここが良ければ2Fが埋まり、悪ければ何をやっても埋まりません。</p>
+        </div>
+      </div>
+      <div class="tier">
+        <div class="t-label"><b>2F</b><span>STOCK</span></div>
+        <div class="t-body">
+          <h4>月額メンバーシップ ── 黒字化の主役</h4>
+          <p>月500〜1,500円で、優先予約・参加費割引・限定イベント・オンラインの交流枠など。<strong>100人 × 1,000円で月10万円が、開催の有無にかかわらず入る。</strong>これが工数と売上を切り離す唯一の方法です。ただし1Fで「この人たちとまた会いたい」が積み上がっていないと1人も入りません。</p>
+        </div>
+      </div>
+      <div class="tier">
+        <div class="t-label"><b>3F</b><span>LEVERAGE</span></div>
+        <div class="t-body">
+          <h4>コンテンツと法人案件 ── 場を持っているから成立するもの</h4>
+          <p>note の有料記事・メンバーシップ（コミュニティ運営のノウハウ、イベント設計論）、カフェや店舗とのタイアップ・送客、企業の懇親会やチームビルディングの受託。<strong>3Fは1F・2Fの副産物</strong>なので、狙って作るものではなく、たまったものを換金する場所です。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="note ok">
+      <span class="label">マイルストーン目安</span>
+      <ul>
+        <li><strong>6ヶ月：</strong>月商5万円・収支トントン。「同じ人が3回来る」が起きていれば成功。</li>
+        <li><strong>12ヶ月：</strong>月商15〜20万円、粗利10万円。メンバーシップを開始する。</li>
+        <li><strong>24ヶ月：</strong>ストック収入で固定費を賄える状態。ここで初めて法人化が現実的な検討に乗る。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 05 -->
+  <section id="s5">
+    <div class="part-head">
+      <p class="kicker">Section 05</p>
+      <h2>Claude Code 運用設計</h2>
+      <p>Claude Code をチャット相手として使うのではなく、<strong>「サークル運営 OS」のリポジトリを1つ作り、そこに知識と手順を溜める</strong>のが本命の使い方です。ブランドのトンマナ、参加規約、過去の募集文、会場リストがリポジトリにあると、毎回ゼロから説明しなくてよくなります。</p>
+    </div>
+
+    <h3>リポジトリ構成</h3>
+    <pre class="tree">circle-ops/
+├ <b>CLAUDE.md</b>              <i># 常時読まれる前提：コンセプト・トンマナ・禁止事項</i>
+├ .claude/
+│  ├ skills/                <i># /コマンドとして呼び出す定型業務</i>
+│  │  ├ event-new/          <i># 企画→募集文・台本・収支・告知まで一括</i>
+│  │  ├ event-close/        <i># 開催後の締め（収支確定・振り返り・レポ下書き）</i>
+│  │  ├ sns-week/           <i># 週次のSNS投稿カレンダー</i>
+│  │  ├ blog-report/        <i># イベントレポ記事（note-team と連携）</i>
+│  │  └ kpi-monthly/        <i># 月次サマリと収支レポート</i>
+│  └ settings.json          <i># Notion / Google Drive MCP の権限設定</i>
+├ brand/
+│  ├ concept.md             <i># Vol.1 で決めた一文コンセプトと対象</i>
+│  ├ voice.md               <i># 言い回し、絵文字の使い方、NGワード</i>
+│  └ rules.md               <i># 参加規約（募集文に毎回差し込む）</i>
+├ venues/
+│  └ venues.md              <i># 会場台帳：店名・エリア・収容・費用・団体可否</i>
+├ events/
+│  └ 2026-09-13-boardgame/
+│      ├ plan.md  recruit.md  script.md  pl.md  retro.md
+└ content/                  <i># ブログ・note の下書き置き場</i></pre>
+
+    <div class="note warn">
+      <span class="label">最重要の運用ルール</span>
+      <p><strong>参加者の個人情報はリポジトリにも Notion にも入れない。</strong>扱うのはニックネームと参加回数まで。本名・連絡先は申込フォーム（Googleフォーム等）側に置いたままにして、必要なときだけ見る。Vol.1 の個人情報の項目と直結します。この線を最初に引いておかないと、後から分離するのは非常に面倒です。</p>
+    </div>
+
+    <h3>作るべきスキル（＝/コマンド）</h3>
+    <div class="cmds">
+
+      <div class="cmd">
+        <span class="name">/event-new</span>
+        <h4>イベント作成 ── 企画名を渡すと、当日までの一式が揃う</h4>
+        <p>これが一番効きます。今まで2〜3時間かかっていた準備が、確認と手直しだけになります。</p>
+        <ul>
+          <li>募集文（規約・キャンセルポリシー・持ち物を自動で差し込み、トンマナは <code>brand/voice.md</code> 準拠）</li>
+          <li>収支シミュレーション（会場台帳から原価を引いて、損益分岐人数を算出）</li>
+          <li>当日の進行台本（Vol.1 の90分テンプレを企画に合わせて調整）</li>
+          <li>持ち物・準備チェックリスト、リマインド文の下書き</li>
+          <li>Notion のイベントDBにページを作成し、Instagram / X 用の告知文まで生成</li>
+        </ul>
+        <p class="say">例：「/event-new 10月下旬に横浜でハロウィンのボドゲ会、12人、参加費2,500円」</p>
+      </div>
+
+      <div class="cmd">
+        <span class="name">/event-close</span>
+        <h4>開催後の締め ── 振り返りを「やらずに終わる」を防ぐ</h4>
+        <ul>
+          <li>実際の参加人数と支出を伝えるだけで、収支を確定して Notion に反映</li>
+          <li>アンケート結果を要約し、次回への改善点を3つに絞って提示</li>
+          <li><strong>その場でイベントレポのブログ下書きまで生成</strong>（記憶が新しいうちに書けるのが最大の利点）</li>
+          <li>参加者へのお礼文＋次回告知のテンプレ</li>
+        </ul>
+      </div>
+
+      <div class="cmd">
+        <span class="name">/sns-week</span>
+        <h4>SNS活動 ── 週次でまとめて作り、投稿は手で出す</h4>
+        <p>SNSは「毎日考える」のが続かない原因なので、<strong>週1回まとめて7日分作る</strong>形にします。</p>
+        <ul>
+          <li>Instagram のフィード投稿案・キャプション・ハッシュタグ（エリア系／興味系／サークル系のバランスを取る）</li>
+          <li>ストーリーズのネタ（準備風景、会場の下見、次回予告）</li>
+          <li>X 用の短文、投稿する曜日と時間帯の提案</li>
+          <li>掲載NGの参加者がいる回は、写真の使い方に注意喚起を出す</li>
+        </ul>
+        <p class="say">例：「/sns-week 来週はボドゲ会の告知が主。先週のランチ会の写真あり」</p>
+      </div>
+
+      <div class="cmd">
+        <span class="name">/blog-report</span>
+        <h4>ブログ作成 ── 既存の note チームをそのまま流用できる</h4>
+        <p>お手元の <code>Note-Team</code> リポジトリには、リサーチ→構成→執筆→校閲→SEO→マネタイズの7役がすでに揃っています。<strong>サークルのイベントレポと集客記事は、この仕組みにそのまま乗せられます。</strong></p>
+        <ul>
+          <li>集客記事（「横浜 ボードゲーム 初心者」等の検索流入狙い）＝ note-researcher → note-planner → note-writer</li>
+          <li>公開前に note-editor で規約・薬機法・肖像権のチェックを通す</li>
+          <li>note のメンバーシップ設計は note-monetizer が担当（3F の収益に直結）</li>
+        </ul>
+      </div>
+
+      <div class="cmd">
+        <span class="name">/kpi</span>
+        <h4>月次サマリ ── 見る数字は3つだけ</h4>
+        <ul>
+          <li>Notion のイベントDBを読んで、参加人数・リピート率・粗利を集計</li>
+          <li>前月比と、伸びた／落ちた要因の仮説</li>
+          <li>翌月の開催計画のたたき台</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>Notion 連携 ── 4つのデータベース</h3>
+    <div class="scroller">
+      <table>
+        <thead>
+          <tr><th>DB</th><th>主なプロパティ</th><th>役割</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>イベント</strong></td>
+            <td>日付／ステータス（企画・募集中・開催前・完了）／会場／定員／申込数／参加費／売上／原価／粗利</td>
+            <td>すべての中心。<code>/event-new</code> が作り、<code>/event-close</code> が閉じる。</td>
+          </tr>
+          <tr>
+            <td><strong>会場台帳</strong></td>
+            <td>店名／エリア／最寄駅／収容人数／費用／団体利用可否／予約方法／担当者メモ</td>
+            <td>地味だが最も効く。原価計算と会場選定が一瞬で終わる。</td>
+          </tr>
+          <tr>
+            <td><strong>参加者</strong></td>
+            <td>ニックネーム／初参加日／参加回数／写真掲載可否／メモ<br><strong>※本名・連絡先は入れない</strong></td>
+            <td>リピート率の把握と、運営メンバー候補の発見に使う。</td>
+          </tr>
+          <tr>
+            <td><strong>コンテンツ</strong></td>
+            <td>種別（SNS/ブログ/note）／公開予定日／状態／関連イベント／実績数値</td>
+            <td>発信の抜け漏れ防止。<code>/sns-week</code> と <code>/blog-report</code> の出力先。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin:0;font-size:var(--step--1);color:var(--ink-2);line-height:1.85;">Notion の MCP 連携はこのセッションで既に使える状態なので、<strong>DBの作成そのものを Claude Code にやらせられます</strong>。手で作る必要はありません。</p>
+
+    <h3>自動化（定期実行）</h3>
+    <div class="scroller">
+      <table>
+        <thead>
+          <tr><th>タイミング</th><th>やること</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="num-cell">毎週月 9:00</td><td>今週のSNS投稿案を3本用意＋今週のイベント準備状況をNotionから確認して報告</td></tr>
+          <tr><td class="num-cell">イベント4日前</td><td>リマインド文の生成、持ち物・会場予約・現金釣り銭のチェックリスト提示</td></tr>
+          <tr><td class="num-cell">イベント翌日</td><td>締め処理のリマインド（<code>/event-close</code> の催促）とレポ記事の下書き</td></tr>
+          <tr><td class="num-cell">毎月1日</td><td>前月のKPIサマリ・収支レポート・翌月の開催計画たたき台</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 06 -->
+  <section id="s6">
+    <div class="part-head">
+      <p class="kicker">Section 06</p>
+      <h2>導入の順番</h2>
+      <p>全部を一度に作ると使わないまま腐ります。<strong>1つ作って3回使ってから次</strong>を徹底してください。</p>
+    </div>
+    <ol class="road">
+      <li>
+        <div class="marker"><span>1</span></div>
+        <div class="body">
+          <p class="when">Week 1</p>
+          <h4><code>CLAUDE.md</code> と <code>brand/</code> だけ作る</h4>
+          <ul>
+            <li>Vol.1 で決めたコンセプト・対象・規約・トンマナを書き出す</li>
+            <li>これがあるだけで、以降の出力の精度が段違いに変わる</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div class="marker"><span>2</span></div>
+        <div class="body">
+          <p class="when">Week 2</p>
+          <h4><code>/event-new</code> と会場台帳</h4>
+          <ul>
+            <li>最も工数を食っている部分から自動化する</li>
+            <li>実際に1回イベントを作ってみて、出力を手直しした差分をスキルに反映する</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div class="marker"><span>3</span></div>
+        <div class="body">
+          <p class="when">Week 3–4</p>
+          <h4>Notion の4DBと <code>/event-close</code></h4>
+          <ul>
+            <li>ここまでで「作って・開いて・締める」が1周する</li>
+            <li>データが溜まり始めるので、KPIが見えるようになる</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div class="marker"><span>4</span></div>
+        <div class="body">
+          <p class="when">Month 2 以降</p>
+          <h4>SNS・ブログ・定期実行</h4>
+          <ul>
+            <li>イベントが安定して回り始めてから発信を強化する（順番が逆だと、集客できても受け皿がない）</li>
+            <li>note チームと接続し、3F の収益準備に入る</li>
+          </ul>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <footer>
+    <p>Vol.1（決定事項リストと法務メモ）の続編です。体制・税務の記述は一般的な情報の整理であり、法的・税務的助言ではありません。開業届の提出、法人設立、非営利型の要件判定については、税理士または最寄りの税務署・商工会議所の無料相談で個別に確認してください。</p>
+    <p>金額はいずれも執筆時点の一般的な目安です。</p>
+  </footer>
+
+</div>

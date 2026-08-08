@@ -1,0 +1,4 @@
+date,event_id,type,item,amount,payer,payee,memo
+2026-01-01,SAMPLE,income,参加費,20000,,,サンプル行。実データを入れたらこの行は削除
+2026-01-01,SAMPLE,expense,会場費,-12000,,,サンプル行
+2026-01-01,SAMPLE,share,分配（企画主担当）,-4800,本体,ニックネーム,役割ベース60%

@@ -1,0 +1,785 @@
+<title>独立サークル立ち上げ 決定事項リスト & 法務メモ</title>
+<style>
+:root {
+  --ground: #F7F8FA;
+  --surface: #FFFFFF;
+  --surface-2: #EDEFF5;
+  --line: #DBDEE8;
+  --line-soft: #E7E9F1;
+  --ink: #14161C;
+  --ink-2: #4C5265;
+  --ink-3: #767D91;
+  --accent: #2F4796;
+  --accent-ink: #2F4796;
+  --accent-soft: #E7EBF8;
+  --alert: #AE3822;
+  --alert-soft: #FAE9E4;
+  --safe: #376E51;
+  --safe-soft: #E4EFE8;
+  --shadow: 0 1px 2px rgba(20, 22, 28, .05), 0 8px 24px -16px rgba(20, 22, 28, .25);
+
+  --font-display: "Hiragino Mincho ProN", "Yu Mincho", YuMincho, "Noto Serif JP", "Times New Roman", serif;
+  --font-body: "Hiragino Sans", "Yu Gothic", YuGothic, "Noto Sans JP", system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --step--1: 0.8125rem;
+  --step-0: 1rem;
+  --step-1: 1.1875rem;
+  --step-2: 1.4375rem;
+  --step-3: 1.875rem;
+  --step-4: 2.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground: #101219;
+    --surface: #171A22;
+    --surface-2: #1E2230;
+    --line: #2C3140;
+    --line-soft: #242938;
+    --ink: #E7E9F0;
+    --ink-2: #A2A9BB;
+    --ink-3: #7B8298;
+    --accent: #94A8E9;
+    --accent-ink: #A9B9EE;
+    --accent-soft: #1C2540;
+    --alert: #E59680;
+    --alert-soft: #37211D;
+    --safe: #8DBCA1;
+    --safe-soft: #1B2C22;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -16px rgba(0, 0, 0, .8);
+  }
+}
+
+:root[data-theme="dark"] {
+  --ground: #101219;
+  --surface: #171A22;
+  --surface-2: #1E2230;
+  --line: #2C3140;
+  --line-soft: #242938;
+  --ink: #E7E9F0;
+  --ink-2: #A2A9BB;
+  --ink-3: #7B8298;
+  --accent: #94A8E9;
+  --accent-ink: #A9B9EE;
+  --accent-soft: #1C2540;
+  --alert: #E59680;
+  --alert-soft: #37211D;
+  --safe: #8DBCA1;
+  --safe-soft: #1B2C22;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px -16px rgba(0, 0, 0, .8);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.85;
+  -webkit-font-smoothing: antialiased;
+  text-size-adjust: 100%;
+}
+
+.wrap {
+  max-width: 50rem;
+  margin: 0 auto;
+  padding: clamp(2rem, 5vw, 4.5rem) clamp(1.1rem, 4vw, 2rem) 6rem;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2.75rem, 6vw, 4rem);
+}
+
+/* ---------- masthead ---------- */
+.masthead { display: flex; flex-direction: column; gap: 1.1rem; }
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0;
+}
+
+.masthead h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 6vw, var(--step-4));
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: .01em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.lede {
+  margin: 0;
+  font-size: var(--step-1);
+  line-height: 1.9;
+  color: var(--ink-2);
+  max-width: 40em;
+}
+
+.premise {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: .5rem;
+}
+.premise div { background: var(--surface); padding: .9rem 1.1rem; }
+.premise dt {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 .15rem;
+}
+.premise dd { margin: 0; font-size: var(--step--1); line-height: 1.7; color: var(--ink); }
+
+/* ---------- toc ---------- */
+.toc {
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--line);
+  padding: 1rem 0 1.2rem;
+}
+.toc ol {
+  list-style: none;
+  margin: .6rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: .35rem 2rem;
+}
+.toc a {
+  color: var(--ink);
+  text-decoration: none;
+  font-size: var(--step--1);
+  display: flex;
+  gap: .6rem;
+  padding: .15rem 0;
+  border-bottom: 1px solid transparent;
+}
+.toc a:hover { border-bottom-color: var(--accent); color: var(--accent-ink); }
+.toc a span { font-family: var(--font-mono); color: var(--ink-3); }
+
+/* ---------- sections ---------- */
+section { display: flex; flex-direction: column; gap: 1.4rem; scroll-margin-top: 1.5rem; }
+
+.part-head { display: flex; flex-direction: column; gap: .5rem; }
+.part-head .kicker {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4.4vw, var(--step-3));
+  font-weight: 600;
+  line-height: 1.4;
+  margin: 0;
+  text-wrap: balance;
+}
+.part-head p { margin: 0; color: var(--ink-2); font-size: var(--step--1); line-height: 1.85; }
+
+h3 {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-weight: 600;
+  line-height: 1.5;
+  margin: 0;
+  text-wrap: balance;
+}
+
+/* ---------- checklist blocks ---------- */
+.block {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.block > header {
+  display: flex;
+  align-items: baseline;
+  gap: .8rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--line-soft);
+  background: var(--surface-2);
+}
+.block > header .tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  color: var(--accent-ink);
+  background: var(--accent-soft);
+  padding: .1rem .45rem;
+  border-radius: 3px;
+  flex: none;
+}
+.block > header h4 {
+  margin: 0;
+  font-size: var(--step-1);
+  font-weight: 700;
+  line-height: 1.5;
+  font-family: var(--font-body);
+}
+.block > header .why {
+  margin: 0;
+  font-size: var(--step--1);
+  color: var(--ink-3);
+  flex-basis: 100%;
+  line-height: 1.7;
+}
+
+.checks { list-style: none; margin: 0; padding: .5rem 0; }
+.checks li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: .1rem .7rem;
+  padding: .55rem 1.25rem;
+  border-bottom: 1px dashed var(--line-soft);
+}
+.checks li:last-child { border-bottom: 0; }
+.checks input[type="checkbox"] {
+  appearance: none;
+  width: 1.05rem;
+  height: 1.05rem;
+  margin: .38rem 0 0;
+  border: 1.5px solid var(--ink-3);
+  border-radius: 3px;
+  background: transparent;
+  cursor: pointer;
+  flex: none;
+  display: grid;
+  place-content: center;
+}
+.checks input[type="checkbox"]::after {
+  content: "";
+  width: .55rem;
+  height: .3rem;
+  border-left: 2px solid var(--surface);
+  border-bottom: 2px solid var(--surface);
+  transform: rotate(-45deg) translate(1px, -1px);
+  opacity: 0;
+}
+.checks input[type="checkbox"]:checked { background: var(--accent); border-color: var(--accent); }
+.checks input[type="checkbox"]:checked::after { opacity: 1; }
+.checks input[type="checkbox"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.checks label { line-height: 1.7; cursor: pointer; }
+.checks .hint {
+  grid-column: 2;
+  margin: .1rem 0 0;
+  font-size: var(--step--1);
+  color: var(--ink-3);
+  line-height: 1.7;
+}
+.checks li:has(input:checked) label { color: var(--ink-3); }
+
+/* ---------- callouts ---------- */
+.note {
+  border-left: 3px solid var(--accent);
+  background: var(--accent-soft);
+  padding: .9rem 1.1rem;
+  border-radius: 0 4px 4px 0;
+  font-size: var(--step--1);
+  line-height: 1.85;
+}
+.note.warn { border-left-color: var(--alert); background: var(--alert-soft); }
+.note.ok { border-left-color: var(--safe); background: var(--safe-soft); }
+.note p { margin: 0; }
+.note p + p { margin-top: .6rem; }
+.note strong { font-weight: 700; }
+.note .label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin-bottom: .3rem;
+  color: var(--accent-ink);
+}
+.note.warn .label { color: var(--alert); }
+.note.ok .label { color: var(--safe); }
+
+/* ---------- legal items ---------- */
+.legal { display: flex; flex-direction: column; gap: 1.1rem; }
+.legal article {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 1.15rem 1.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+}
+.legal .head { display: flex; align-items: center; gap: .7rem; flex-wrap: wrap; }
+.legal h4 { margin: 0; font-size: var(--step-1); font-weight: 700; line-height: 1.5; }
+.legal p { margin: 0; font-size: var(--step--1); line-height: 1.85; color: var(--ink-2); }
+.legal p strong { color: var(--ink); }
+.legal ul { margin: 0; padding-left: 1.15rem; font-size: var(--step--1); line-height: 1.8; color: var(--ink-2); }
+.legal li + li { margin-top: .3rem; }
+
+.pill {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  padding: .15rem .5rem;
+  border-radius: 999px;
+  flex: none;
+  white-space: nowrap;
+}
+.pill.green { color: var(--safe); background: var(--safe-soft); border: 1px solid color-mix(in srgb, var(--safe) 30%, transparent); }
+.pill.amber { color: var(--accent-ink); background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); }
+.pill.red { color: var(--alert); background: var(--alert-soft); border: 1px solid color-mix(in srgb, var(--alert) 30%, transparent); }
+
+/* ---------- roadmap ---------- */
+.road { display: flex; flex-direction: column; gap: 0; counter-reset: phase; }
+.road > li { list-style: none; display: grid; grid-template-columns: 3.4rem 1fr; gap: 0 1rem; }
+.road .marker { position: relative; display: flex; justify-content: center; }
+.road .marker span {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--surface);
+  background: var(--accent);
+  width: 2rem; height: 2rem;
+  border-radius: 999px;
+  display: grid; place-content: center;
+  margin-top: .35rem;
+  z-index: 1;
+}
+.road .marker::before {
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 1px;
+  background: var(--line);
+}
+.road > li:first-child .marker::before { top: 1.35rem; }
+.road > li:last-child .marker::before { bottom: auto; height: 1.35rem; }
+.road .body { padding-bottom: 1.8rem; display: flex; flex-direction: column; gap: .45rem; }
+.road h4 { margin: 0; font-size: var(--step-1); font-weight: 700; line-height: 1.6; }
+.road .when {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.road ul { margin: 0; padding-left: 1.15rem; font-size: var(--step--1); line-height: 1.8; color: var(--ink-2); }
+.road li + li { margin-top: .25rem; }
+
+/* ---------- appendix ---------- */
+.rules {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 1.3rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: .8rem;
+}
+.rules h4 { margin: 0; font-size: var(--step-1); font-weight: 700; }
+.rules ol { margin: 0; padding-left: 1.3rem; font-size: var(--step--1); line-height: 1.85; }
+.rules li + li { margin-top: .35rem; }
+.rules .src { font-size: var(--step--1); color: var(--ink-3); margin: 0; }
+
+.scroller { overflow-x: auto; }
+table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 34rem;
+  font-size: var(--step--1);
+  background: var(--surface);
+}
+th, td { text-align: left; padding: .7rem .85rem; border-bottom: 1px solid var(--line-soft); vertical-align: top; line-height: 1.7; }
+th { font-family: var(--font-body); font-weight: 700; color: var(--ink); border-bottom: 1px solid var(--line); background: var(--surface-2); white-space: nowrap; }
+td { color: var(--ink-2); }
+td strong { color: var(--ink); font-weight: 700; }
+
+footer {
+  border-top: 1px solid var(--line);
+  padding-top: 1.5rem;
+  font-size: var(--step--1);
+  color: var(--ink-3);
+  line-height: 1.85;
+}
+footer p { margin: 0; }
+footer p + p { margin-top: .5rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Independent Circle · Kanagawa &amp; Tokyo</p>
+    <h1>趣味の延長からはじめる、<br>独立サークルの設計図</h1>
+    <p class="lede">法人化せず、有志のお手伝いで回す前提の「決めるべきことリスト」と、その前に押さえておくべき法律・リスクの整理です。上から順に埋めていけば、最初のイベントまで一本道になります。</p>
+    <dl class="premise">
+      <div><dt>Form</dt><dd>任意団体（法人化なし）</dd></div>
+      <div><dt>Area</dt><dd>神奈川・東京</dd></div>
+      <div><dt>Team</dt><dd>イベントで出会った有志＝お手伝い</dd></div>
+      <div><dt>Stance</dt><dd>趣味の延長／黒字を目的にしない</dd></div>
+    </dl>
+  </header>
+
+  <nav class="toc" aria-label="目次">
+    <p class="eyebrow">Contents</p>
+    <ol>
+      <li><a href="#part1"><span>01</span>決めるべきこと（7領域・全チェック項目）</a></li>
+      <li><a href="#part2"><span>02</span>法律まわり：お手伝いメンバーの扱い</a></li>
+      <li><a href="#part3"><span>03</span>企画別のリスク早見表</a></li>
+      <li><a href="#part4"><span>04</span>最初の90日ロードマップ</a></li>
+      <li><a href="#part5"><span>05</span>付録：参加ルール雛形／初回設計例</a></li>
+    </ol>
+  </nav>
+
+  <!-- ============ PART 1 ============ -->
+  <section id="part1">
+    <div class="part-head">
+      <p class="kicker">Part 01</p>
+      <h2>決めるべきこと</h2>
+      <p>7つの領域に分けています。<strong>◎印は初回イベント前に必ず決める項目</strong>、それ以外は走りながらで構いません。全部を最初に完璧にしようとすると立ち上がらないので、まずは A・C・D・F の◎だけを埋めるのがおすすめです。</p>
+    </div>
+
+    <div class="block">
+      <header>
+        <span class="tag">A</span>
+        <h4>コンセプトと立ち位置</h4>
+        <p class="why">「誰の、どんな時間をつくるのか」を一文で言えるかどうかが、集客文もイベント選びも全部決めます。</p>
+      </header>
+      <ul class="checks">
+        <li><input type="checkbox" id="a1"><label for="a1">◎ サークル名（＋ローマ字表記・ハッシュタグ）</label><p class="hint">既存団体と被っていないか、SNSとGoogleで検索。商標登録された同名サービスがないかも一応確認しておく。</p></li>
+        <li><input type="checkbox" id="a2"><label for="a2">◎ 一文コンセプト（20〜40字）</label><p class="hint">例：「はじめましての人と、少年心に戻って遊べる場所」。掲げた4つ（友達づくり／価値観を広げる／話す楽しさ／少年心）のうち<strong>看板にするのは1つ</strong>に絞り、残りは説明文で補足すると伝わりやすい。</p></li>
+        <li><input type="checkbox" id="a3"><label for="a3">◎ 恋愛要素をどこまで表に出すか</label><p class="hint">後述の法務メモ参照。「恋人づくり」を前面に出すと、参加者層・トラブル・規制の3点が一気に重くなる。<strong>対外的には「友達づくり・交流」、恋愛は結果として起こるもの</strong>という建て付けが、趣味の延長としては圧倒的に扱いやすい。</p></li>
+        <li><input type="checkbox" id="a4"><label for="a4">やらないことの宣言（NGリスト）</label><p class="hint">例：ビジネス勧誘の場にしない／お酒中心にしない／出会い系にしない。これを最初に決めておくと、後からの判断が全部楽になる。</p></li>
+        <li><input type="checkbox" id="a5"><label for="a5">ロゴ・カラー・トーン（手描きでも可）</label><p class="hint">他人のキャラクター画像・フリー素材の規約違反に注意。まずは文字ロゴ1つで十分。</p></li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <header>
+        <span class="tag">B</span>
+        <h4>体制とメンバー</h4>
+        <p class="why">「お手伝いの範囲」で回すなら、<strong>役割を軽く・交代可能に</strong>設計するのが唯一のコツ。重い責任を任せた瞬間に人は離れます。</p>
+      </header>
+      <ul class="checks">
+        <li><input type="checkbox" id="b1"><label for="b1">◎ 代表（最終決定者）が誰か</label><p class="hint">任意団体は法人格がないため、会場契約・支払い・トラブル対応は<strong>実質あなた個人の責任</strong>になる。だからこそ決定権も一元化しておくのが安全。</p></li>
+        <li><input type="checkbox" id="b2"><label for="b2">◎ お手伝いメンバーの役割定義（3つまで）</label><p class="hint">例：①当日ファシリ（会話を回す）②受付・会計 ③写真・告知。1人1役、当日限りで完結する粒度にする。</p></li>
+        <li><input type="checkbox" id="b3"><label for="b3">◎ お手伝いへの見返りをどうするか</label><p class="hint">無報酬＋参加費免除／飲食代持ち、が最もシンプルで法的にも安全（後述）。現金の謝礼を出すと一気に論点が増える。</p></li>
+        <li><input type="checkbox" id="b4"><label for="b4">声をかける基準（何を見て誘うか）</label><p class="hint">おすすめは「3回以上参加している」「初参加の人に自分から話しかけている」の2点。人柄より<strong>行動</strong>で見る。</p></li>
+        <li><input type="checkbox" id="b5"><label for="b5">運営の連絡手段と会議頻度</label><p class="hint">Discord or LINEグループ＋月1回30分のオンライン振り返り、くらいが趣味の範囲で続く上限。</p></li>
+        <li><input type="checkbox" id="b6"><label for="b6">辞め方・抜け方のルール</label><p class="hint">「いつでも抜けてOK、抜けても参加者としては歓迎」を明文化しておくと、逆に長く続く。</p></li>
+        <li><input type="checkbox" id="b7"><label for="b7">アカウント・データの管理者</label><p class="hint">SNSのログイン情報、参加者名簿、決済アカウントを誰が持つか。退任時の引き継ぎ・削除もセットで。</p></li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <header>
+        <span class="tag">C</span>
+        <h4>イベント設計</h4>
+        <p class="why">定番2本（ボードゲーム会・ランチカフェ）を軸に、特別企画を月1で差し込む構成が現実的です。</p>
+      </header>
+      <ul class="checks">
+        <li><input type="checkbox" id="c1"><label for="c1">◎ 開催頻度とサイクル</label><p class="hint">例：定番を月2回（第2土曜＝ボドゲ／第4日曜＝ランチ）＋特別企画を隔月。<strong>日付を固定</strong>すると告知も参加習慣もつくりやすい。</p></li>
+        <li><input type="checkbox" id="c2"><label for="c2">◎ 1回あたりの定員</label><p class="hint">初期は6〜10人が最適。ボドゲなら4人×2卓＝8人。15人を超えると<strong>ファシリが2人以上必要</strong>になり、運営負荷が段違いに上がる。</p></li>
+        <li><input type="checkbox" id="c3"><label for="c3">◎ エリアと会場の定番</label><p class="hint">神奈川・東京の両方でやるなら「横浜／川崎／新宿」など<strong>3拠点まで</strong>に絞る。ボドゲカフェ、時間貸しレンタルスペース、公共施設の会議室（自治体の団体登録が必要な場合あり）を各エリア2軒ずつ下見。</p></li>
+        <li><input type="checkbox" id="c4"><label for="c4">◎ 当日の進行台本（60〜90分の型）</label><p class="hint">受付→自己紹介ラウンド→本編→締めの一言、まで秒単位でなくていいので流れを固定。<strong>初参加者が最初の10分で1人でも名前を覚えられる設計</strong>が最重要。</p></li>
+        <li><input type="checkbox" id="c5"><label for="c5">参加ハードルを下げる仕掛け</label><p class="hint">名札（ニックネーム＋「呼ばれたい呼び方」）、初参加バッジ、席替えのタイミング、会話に困った時のお題カード。</p></li>
+        <li><input type="checkbox" id="c6"><label for="c6">特別企画の年間カレンダー</label><p class="hint">季節行事（クリスマス、鍋、花見）は<strong>2〜3ヶ月前から</strong>会場を押さえる必要がある。カラオケ大会・スポーツ大会・ウォーキングは天候・怪我のリスク設計とセットで。</p></li>
+        <li><input type="checkbox" id="c7"><label for="c7">リピートの導線</label><p class="hint">解散前に次回の日程を口頭で告知＋その場で申込みを受ける。これだけでリピート率が大きく変わる。</p></li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <header>
+        <span class="tag">D</span>
+        <h4>お金</h4>
+        <p class="why">「儲けない」と決めていても、お金の流れの設計は必要です。<strong>赤字の垂れ流しが続くと、それが辞める理由になります。</strong></p>
+      </header>
+      <ul class="checks">
+        <li><input type="checkbox" id="d1"><label for="d1">◎ 参加費の方式</label><p class="hint">(a) 実費割り勘（会場費÷人数＋各自飲食代）、(b) 定額会費制（例1,500円）のどちらか。<strong>(a)は最もリスクが低く</strong>、営利性を問われにくい。(b)は運営が楽で予測が立つ。</p></li>
+        <li><input type="checkbox" id="d2"><label for="d2">◎ 集金方法（当日現金 or 事前決済）</label><p class="hint">当日現地払いなら手続き上ほぼ何も要らない。事前オンライン決済にすると特定商取引法の表示義務が絡むため、<strong>Peatixなどの外部サービス経由</strong>を推奨（後述）。</p></li>
+        <li><input type="checkbox" id="d3"><label for="d3">◎ キャンセルポリシー</label><p class="hint">例：前日までキャンセル無料／当日キャンセル・無断欠席は次回参加時に会場費実費をご負担。<strong>募集ページに必ず明記</strong>。</p></li>
+        <li><input type="checkbox" id="d4"><label for="d4">会計の分離と記録</label><p class="hint">サークル用の口座（またはPayPay/Kyash等の別ウォレット）と、スプレッドシート1枚の収支記録。個人の財布と混ぜないことが後々の説明責任を守る。</p></li>
+        <li><input type="checkbox" id="d5"><label for="d5">余剰金の扱い</label><p class="hint">「余りは次回の備品・会場費に充当し、個人の懐に入れない」と決めて公開しておくと、参加者にもお手伝いにも説明しやすい。</p></li>
+        <li><input type="checkbox" id="d6"><label for="d6">備品への初期投資の上限</label><p class="hint">ボードゲーム、名札、モバイルバッテリー、予備マスク等。上限額を先に決める（例：初年度3万円）。</p></li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <header>
+        <span class="tag">E</span>
+        <h4>集客と発信</h4>
+        <p class="why">最初の3回は「知り合いの知り合い」で埋めるのが定石。外部募集は形が固まってからで十分です。</p>
+      </header>
+      <ul class="checks">
+        <li><input type="checkbox" id="e1"><label for="e1">◎ 募集チャネルを2つに絞る</label><p class="hint">Instagram（世界観の蓄積）＋ Peatix/つなげーと 等の募集プラットフォーム（申込導線）の組み合わせが定番。X・TikTokは余力があれば。</p></li>
+        <li><input type="checkbox" id="e2"><label for="e2">◎ 募集文のテンプレ</label><p class="hint">必須項目：日時／場所（最寄駅まで）／定員／参加費と内訳／当日の流れ／対象（年齢制限含む）／禁止事項／キャンセルポリシー／主催者の一言。</p></li>
+        <li><input type="checkbox" id="e3"><label for="e3">申込フォームの項目</label><p class="hint">ニックネーム、年齢（成人確認）、連絡先、初参加か、参加規約への同意チェック、写真掲載の可否。<strong>必要以上に個人情報を集めない</strong>のが原則。</p></li>
+        <li><input type="checkbox" id="e4"><label for="e4">写真・SNS掲載のルール</label><p class="hint">申込時に可否を取り、当日はNGの人が一目でわかる工夫（名札の色を変える等）。顔が写る写真は掲載前に本人確認するのが安全。</p></li>
+        <li><input type="checkbox" id="e5"><label for="e5">参加後のつながり方</label><p class="hint">LINEオープンチャット or Discord。<strong>ただし「異性との出会い」を目的に掲げた連絡ツールの運営は法規制に触れうる</strong>ため、あくまでイベント告知・参加者交流の場として運用する（後述）。</p></li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <header>
+        <span class="tag">F</span>
+        <h4>安全・ルール・トラブル対応</h4>
+        <p class="why">交流イベントで最も高い確率で起きるのは、事故ではなく<strong>勧誘・しつこい連絡・場を乱す人</strong>です。事前の一文が効きます。</p>
+      </header>
+      <ul class="checks">
+        <li><input type="checkbox" id="f1"><label for="f1">◎ 参加規約（禁止事項リスト）</label><p class="hint">付録に雛形あり。募集ページからリンクし、申込時に同意チェックを取る。</p></li>
+        <li><input type="checkbox" id="f2"><label for="f2">◎ 年齢制限</label><p class="hint"><strong>18歳以上（飲酒を伴う回は20歳以上）</strong>を推奨。未成年が混ざると各都道府県の青少年保護育成条例の論点が生じ、運営の負担が跳ね上がる。</p></li>
+        <li><input type="checkbox" id="f3"><label for="f3">◎ 違反時の対応フロー</label><p class="hint">①その場で運営が声かけ →②退場をお願い（返金なし）→③以降の参加お断り。<strong>誰が判断するかを事前に決めておく</strong>（＝代表）。</p></li>
+        <li><input type="checkbox" id="f4"><label for="f4">相談窓口</label><p class="hint">その場で言いづらいことを後から伝えられる連絡先（DM可）を用意し、当日アナウンスする。これがあるだけで場の安心感が変わる。</p></li>
+        <li><input type="checkbox" id="f5"><label for="f5">保険への加入</label><p class="hint">スポーツ大会・ウォーキング・遠出をやるなら<strong>イベント保険（レクリエーション保険）</strong>を検討。1回・1人あたり数十円〜数百円の掛け捨てがある。任意団体でも加入可能な商品が多い。</p></li>
+        <li><input type="checkbox" id="f6"><label for="f6">緊急時の連絡体制</label><p class="hint">当日の運営同士の連絡手段、会場の最寄り病院、参加者の緊急連絡先を取るかどうか。</p></li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <header>
+        <span class="tag">G</span>
+        <h4>続けるための仕組み</h4>
+        <p class="why">趣味の延長で最大の敵は「主催者の消耗」です。伸ばす目標より先に、休む基準を決めておきます。</p>
+      </header>
+      <ul class="checks">
+        <li><input type="checkbox" id="g1"><label for="g1">見る数字を3つだけ決める</label><p class="hint">例：参加人数／リピート率／「また来たい」と言われた数。細かいKPIは趣味の範囲では逆効果。</p></li>
+        <li><input type="checkbox" id="g2"><label for="g2">毎回のアンケート（3問まで）</label><p class="hint">「楽しかったか（5段階）」「話せた人数」「次にやってほしい企画」。Googleフォームで30秒で終わる形に。</p></li>
+        <li><input type="checkbox" id="g3"><label for="g3">休止・撤退の基準</label><p class="hint">例：「3回連続で参加者4人未満なら形式を見直す」「自分が楽しくなくなったら休む」。先に決めておくと罪悪感なく休める。</p></li>
+        <li><input type="checkbox" id="g4"><label for="g4">記録の残し方</label><p class="hint">開催記録（日付・人数・収支・気づき）を1行ずつ。半年後に振り返ると、次に伸ばす場所が明確に見える。</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ PART 2 ============ -->
+  <section id="part2">
+    <div class="part-head">
+      <p class="kicker">Part 02</p>
+      <h2>法律まわり：お手伝いメンバーの扱い</h2>
+      <p>ご質問の「あくまでお手伝いの範囲なら法律観点で問題ないか」への回答です。<strong>結論から言うと、無報酬の有志であれば問題ありません。</strong>問題になるとすれば、報酬を払い始めたときと、指揮命令が強くなったときです。</p>
+    </div>
+
+    <div class="note ok">
+      <span class="label">結論</span>
+      <p><strong>法人化しなくても、任意団体（権利能力なき社団）として自由に活動できます。</strong>設立の届出も許認可も不要です。有志が無報酬で手伝う形であれば労働法の問題は生じません。ただし「法人でない」ということは<strong>契約も責任も代表者個人に帰属する</strong>ということでもあり、そこだけは自覚しておく必要があります。</p>
+    </div>
+
+    <div class="legal">
+
+      <article>
+        <div class="head"><span class="pill green">問題なし</span><h4>無報酬のボランティアは「労働者」ではない</h4></div>
+        <p>労働基準法上の「労働者」は、<strong>①使用者の指揮命令下で労務を提供し、②その対価として賃金を受け取る者</strong>を指します。無報酬の有志はこの②を満たさないため、労基法・最低賃金法の適用対象外です。シフトを組んでも、当日の役割を指示しても、報酬がなければ雇用にはなりません。</p>
+        <p>安全ラインを保つための実務ポイント：</p>
+        <ul>
+          <li>金銭の報酬は出さない。出すなら<strong>参加費免除・当日の飲食代・交通費の実費補填</strong>までに留める（実費弁償は賃金ではない）</li>
+          <li>参加は任意であることを明示し、欠席にペナルティを課さない</li>
+          <li>ノルマ・売上目標を課さない</li>
+          <li>「雇っている」「働いてもらう」といった言い方をしない（実態で判断されますが、表現も証拠になります）</li>
+        </ul>
+      </article>
+
+      <article>
+        <div class="head"><span class="pill amber">注意</span><h4>現金の謝礼を継続的に払い始めると論点が増える</h4></div>
+        <p>「毎回3,000円」のように<strong>定額・継続的に</strong>金銭を渡し、かつ役割や時間を指示していると、名目が「謝礼」「業務委託」でも<strong>実態として雇用と評価される可能性</strong>があります（労働者性は契約書の名前ではなく実態で判断されます）。そうなると最低賃金・労働時間・労災といった話が芋づる式に付いてきます。</p>
+        <p>回避策はシンプルで、<strong>当面は現金の謝礼を制度化しないこと</strong>。どうしても報いたい場合は、都度の少額の心付けや打ち上げのおごりといった形にし、金額と頻度を記録しておきます。将来的に定常的な報酬を払う段階になったら、そのときに税理士・社労士に相談してください。</p>
+      </article>
+
+      <article>
+        <div class="head"><span class="pill amber">注意</span><h4>労災は使えない ── 事故時の備えは自前で</h4></div>
+        <p>ボランティアは労災保険の対象外です。<strong>運営中に手伝いメンバーが怪我をしても、労災はおりません。</strong>スポーツ大会やウォーキング、重い荷物の運搬を伴う企画をやるなら、イベント保険（レクリエーション保険）やボランティア保険で穴を埋めておくのが誠実です。「万一のときは保険がない」ことを、手伝ってもらう前に一言伝えておくべきです。</p>
+      </article>
+
+      <article>
+        <div class="head"><span class="pill amber">注意</span><h4>「恋人づくり」を掲げるときの2つの規制</h4></div>
+        <p><strong>①オフラインの交流会そのものは規制対象外です。</strong>友達づくり・恋愛のきっかけを目的にリアルイベントを開くこと自体に、届出も許可も要りません。</p>
+        <p><strong>②規制がかかるのは「オンラインで異性を引き合わせる仕組み」を提供したときです。</strong>いわゆる出会い系サイト規制法の「インターネット異性紹介事業」は、面識のない異性同士が交際目的でネット上で相互に連絡できる仕組みを、反復継続して提供する事業を指します。これに当たると<strong>公安委員会への届出と年齢確認が義務</strong>になります。イベントの告知と参加者の交流に使うLINEオープンチャットやDiscordは通常これに当たりませんが、「異性を紹介する」「マッチングする」機能を売りにし始めると近づきます。</p>
+        <p><strong>③婚活サービスとして売ると特定商取引法の領域に入ります。</strong>結婚相手の紹介サービスで、契約期間2ヶ月超・金額5万円超の継続契約は「特定継続的役務提供」に該当し、書面交付義務やクーリング・オフの対象になります。都度払いの趣味サークルなら該当しませんが、「入会金＋月会費で理想の相手を紹介」という設計にすると射程に入ります。</p>
+      </article>
+
+      <article>
+        <div class="head"><span class="pill amber">注意</span><h4>事前オンライン決済＝通信販売の表示義務</h4></div>
+        <p>ウェブ上で申込みを受けて事前に参加費を決済する形は、特定商取引法の「通信販売」に当たりうるため、<strong>事業者の氏名・住所・連絡先の表示</strong>が求められます。個人で運営する場合、自宅住所を晒すことになりかねません。</p>
+        <p>現実的な回避策は2つ。<strong>(a) 当日現地払いにする</strong>（通信販売に当たらないので最も簡単）。<strong>(b) Peatixなどの外部プラットフォームを使う</strong>（決済主体がプラットフォーム側になり、個人情報の露出を抑えられる）。最初は (a) で始めて、規模が出てきたら (b) に移行するのがおすすめです。</p>
+      </article>
+
+      <article>
+        <div class="head"><span class="pill amber">注意</span><h4>参加者名簿は個人情報保護法の対象</h4></div>
+        <p>2022年の改正以降、取り扱う件数にかかわらず、事業として個人情報を扱う者は個人情報取扱事業者に当たります。任意団体でも例外ではありません。難しいことをする必要はなく、次の4点で足ります。</p>
+        <ul>
+          <li>利用目的（イベントの連絡・運営）を申込フォームに明記する</li>
+          <li>必要以上に集めない（本名・住所・勤務先を集める必然性は通常ない）</li>
+          <li>運営内でも閲覧できる人を限定し、無断で他の目的に使わない</li>
+          <li>退会・イベント終了後に不要になったデータは削除する</li>
+        </ul>
+      </article>
+
+      <article>
+        <div class="head"><span class="pill amber">注意</span><h4>収支が黒字になったら、税金は代表者個人の話になる</h4></div>
+        <p>任意団体には法人格がないため、<strong>利益は原則として代表者個人の所得</strong>として扱われます。給与所得者の場合、副収入の所得が年20万円を超えると確定申告が必要です。実費割り勘中心で黒字が出ない設計なら通常は問題になりませんが、だからこそ<strong>収支記録を残し、個人の財布と分けておくこと</strong>が自分を守ります。</p>
+      </article>
+
+      <article>
+        <div class="head"><span class="pill red">避ける</span><h4>やらないほうがいい3つ</h4></div>
+        <ul>
+          <li><strong>自分で酒を仕入れて有料で提供する</strong> ── 酒類販売業免許の論点になります。店で各自注文、が正解。</li>
+          <li><strong>手作り料理を反復して有料提供する</strong> ── 鍋パーティ等は、食材費の実費割り勘＋みんなで作る形に。継続的に食事を作って対価を取ると食品衛生法の営業許可の話になります。</li>
+          <li><strong>交通・宿泊を手配して手数料を取る</strong> ── 旅行業法の登録が必要になり得ます。遠出は<strong>現地集合・現地解散、宿泊は各自予約</strong>を徹底すれば問題ありません。</li>
+        </ul>
+      </article>
+
+    </div>
+
+    <div class="note warn">
+      <span class="label">免責</span>
+      <p>ここに書いたのは一般的な情報の整理であり、法的助言ではありません。個別の判断は前提となる事実関係で変わります。<strong>金銭の授受が定常化したとき、恋愛・婚活を明確に事業として掲げるとき、宿泊や遠征を扱うとき</strong>は、弁護士や自治体の無料法律相談で個別に確認してください。</p>
+    </div>
+  </section>
+
+  <!-- ============ PART 3 ============ -->
+  <section id="part3">
+    <div class="part-head">
+      <p class="kicker">Part 03</p>
+      <h2>企画別のリスク早見表</h2>
+      <p>挙げていただいた企画を、運営負荷とリスクで並べました。<strong>上から順に始めるのが安全</strong>です。</p>
+    </div>
+    <div class="scroller">
+      <table>
+        <thead>
+          <tr><th>企画</th><th>難易度</th><th>気をつける点</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>ボードゲーム会</strong></td><td>低</td><td>最初の一本に最適。ゲームがあるので会話が自然に生まれ、初参加者が浮かない。ボドゲカフェを使えば会場手配もほぼ不要。</td></tr>
+          <tr><td><strong>ランチカフェ</strong></td><td>低</td><td>予約時に人数変更の締切を確認。会計は各自会計にできる店だと運営が圧倒的に楽。</td></tr>
+          <tr><td><strong>珍しいカフェ巡り</strong></td><td>低</td><td>店側に団体利用の可否を事前確認。撮影可否も店ごとに違うので要確認。</td></tr>
+          <tr><td><strong>コンセプトご飯会</strong></td><td>中</td><td>お店で開催なら問題なし。ドタキャンでコース料理のキャンセル料が発生する形は、キャンセルポリシーを厳しめに。</td></tr>
+          <tr><td><strong>カラオケ大会</strong></td><td>中</td><td>店舗のカラオケなら著作権処理は店側。人数分の部屋確保と、歌わない人の居場所づくりを設計する。</td></tr>
+          <tr><td><strong>季節の行事</strong></td><td>中</td><td>2〜3ヶ月前から会場確保。プレゼント交換をやるなら金額上限を必ず明示。</td></tr>
+          <tr><td><strong>ウォーキング</strong></td><td>中</td><td>怪我・熱中症・迷子。中止基準（雨天・気温）を事前に決め、最後尾を運営が歩く。保険を検討。</td></tr>
+          <tr><td><strong>鍋パーティ</strong></td><td>中〜高</td><td>調理を伴うため会場が限られる（キッチン付きレンタルスペース）。食材費は実費割り勘、調理は全員参加の形に。食物アレルギーの事前確認は必須。</td></tr>
+          <tr><td><strong>スポーツ大会</strong></td><td>高</td><td>怪我のリスクが最も高い。施設予約、保険、体力差への配慮、経験者が仕切りすぎない設計が要る。慣れてから。</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ PART 4 ============ -->
+  <section id="part4">
+    <div class="part-head">
+      <p class="kicker">Part 04</p>
+      <h2>最初の90日ロードマップ</h2>
+      <p>「組織化」から入ると必ず止まります。<strong>先に1回開いて、そこから仲間を見つける</strong>順番が正解です。</p>
+    </div>
+    <ol class="road">
+      <li>
+        <div class="marker"><span>1</span></div>
+        <div class="body">
+          <p class="when">Day 1–14 ／ 決める</p>
+          <h4>一人で決められることを、一人で決めきる</h4>
+          <ul>
+            <li>Aの◎（名前・コンセプト・恋愛要素の扱い）を確定</li>
+            <li>Dの◎（参加費方式・集金方法・キャンセルポリシー）を確定</li>
+            <li>Fの◎（参加規約・年齢制限）を作成 ── 付録の雛形をそのまま使ってOK</li>
+            <li>Instagramアカウントを開設し、コンセプトを1投稿だけ上げる</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div class="marker"><span>2</span></div>
+        <div class="body">
+          <p class="when">Day 15–30 ／ 1回目</p>
+          <h4>知り合い中心で、6人のボードゲーム会を1回開く</h4>
+          <ul>
+            <li>会場はボドゲカフェ。当日現金払い、実費割り勘</li>
+            <li>お手伝いはまだ置かない。全部自分でやって、何が大変かを体感する</li>
+            <li>終了後すぐ、3問アンケート＋自分の気づきを記録</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div class="marker"><span>3</span></div>
+        <div class="body">
+          <p class="when">Day 31–60 ／ 型をつくる</p>
+          <h4>同じ形式で3回まわし、進行台本を固める</h4>
+          <ul>
+            <li>2回目・3回目・4回目を同じ形式で開催（変数を増やさない）</li>
+            <li>受付〜自己紹介〜本編〜締めの流れを台本化</li>
+            <li>この間に「複数回来ていて、初参加者に自分から話しかけている人」を観察してリストアップ</li>
+            <li>ランチカフェ回を1本だけ試す</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div class="marker"><span>4</span></div>
+        <div class="body">
+          <p class="when">Day 61–90 ／ 組織化</p>
+          <h4>2〜3人に「当日だけ手伝ってほしい」と声をかける</h4>
+          <ul>
+            <li>頼み方は具体的に：「次回、受付だけお願いできませんか。参加費は無料にします」</li>
+            <li>役割は当日限りで完結する粒度、無報酬＋参加費免除で（Part 02参照）</li>
+            <li>運営用グループを作り、月1回30分の振り返りを設定</li>
+            <li>ここで初めて特別企画（季節行事など）に着手し、外部募集も開始する</li>
+          </ul>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ============ PART 5 ============ -->
+  <section id="part5">
+    <div class="part-head">
+      <p class="kicker">Part 05</p>
+      <h2>付録</h2>
+    </div>
+
+    <div class="rules">
+      <h4>参加ルール雛形（募集ページにそのまま貼れます）</h4>
+      <ol>
+        <li>ご参加は18歳以上の方に限らせていただきます（お酒を伴う回は20歳以上）。</li>
+        <li>宗教・政治・投資・ネットワークビジネス・営業目的の勧誘は固くお断りします。発覚した時点でご退場いただき、以降のご参加をお断りします（返金はいたしません）。</li>
+        <li>他の参加者への執拗な連絡先の要求、しつこい誘い、つきまとい行為は禁止です。</li>
+        <li>他の参加者を不快にさせる言動（容姿・職業・年収・学歴などへの言及、性的な話題、差別的発言）はご遠慮ください。</li>
+        <li>飲酒の強要はいたしません。また、泥酔された方はお帰りいただく場合があります。</li>
+        <li>写真撮影は掲載可否を事前に確認します。掲載不可の方は名札でお知らせいただきます。無断での他の参加者の撮影・SNS投稿は禁止です。</li>
+        <li>会場および施設のルールに従ってください。</li>
+        <li>イベント中の事故・盗難・参加者間のトラブルについて、主催者は責任を負いかねます。各自の責任でご参加ください。</li>
+        <li>キャンセルは前日までにご連絡ください。当日キャンセル・無断欠席の場合、次回ご参加時に会場費の実費をご負担いただくことがあります。</li>
+        <li>気になることがあれば、当日でも後日でも運営までご連絡ください。匿名でも構いません。</li>
+      </ol>
+      <p class="src">※ 8番の免責条項は万能ではなく、主催者に明らかな過失がある場合まで責任を免れるものではありません。それでも、参加者の心構えを揃える意味で明記する価値があります。</p>
+    </div>
+
+    <div class="rules">
+      <h4>初回イベント設計例 ── ボードゲーム会（90分・6名）</h4>
+      <ol>
+        <li><strong>0–10分／受付</strong>：名札に「呼ばれたい名前」を書いてもらう。早く来た人には主催者が必ず話しかける。</li>
+        <li><strong>10–20分／自己紹介ラウンド</strong>：一人45秒。お題は「名前・住んでいるエリア・最近ハマっていること」の3点に固定。長くしない。</li>
+        <li><strong>20–75分／本編</strong>：3人×2卓で軽量ゲームを2本。1本終わったら卓をシャッフルして、全員が全員と一度は同卓する。</li>
+        <li><strong>75–85分／締め</strong>：一人ずつ「今日話して面白かったこと」を一言。次回の日程をその場で告知。</li>
+        <li><strong>85–90分／解散</strong>：アンケートのQRコードを見せて、その場で回答してもらう。</li>
+      </ol>
+      <p class="src">ポイントは20分の自己紹介ラウンドと卓のシャッフル。この2つがあるだけで「誰とも話せなかった」という最悪の体験がほぼ消えます。</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>この資料は、いただいたコンセプト・ターゲット・企画案をもとに作成した立ち上げ用の作業リストです。チェックボックスはこのページ上でそのまま使えます（リロードするとリセットされます）。</p>
+    <p>法務パートは一般的な情報の整理であり、法的助言ではありません。</p>
+  </footer>
+
+</div>
