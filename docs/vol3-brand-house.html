@@ -1,4 +1,4 @@
-<title>Vol.3 レーベル型 ── 主催者が独立できるサークルの設計</title>
+<title>Vol.3 現状からの移行計画 ── レーベル型サークルへ</title>
 <style>
 :root {
   --ground: #F7F8FA; --surface: #FFFFFF; --surface-2: #EDEFF5;
@@ -202,25 +202,45 @@ footer p + p { margin-top: .5rem; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
 
+<style>
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem,1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 5px; overflow: hidden; }
+.stat-grid > div { background: var(--surface); padding: .95rem 1.1rem; display: flex; flex-direction: column; gap: .15rem; }
+.stat-grid dt { margin: 0; font-family: var(--font-mono); font-size: .6875rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+.stat-grid dd { margin: 0; font-family: var(--font-mono); font-size: 1.25rem; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ink); line-height: 1.4; }
+.stat-grid dd small { font-size: .75rem; font-weight: 400; color: var(--ink-3); font-family: var(--font-body); }
+.bottleneck { display: flex; flex-direction: column; gap: .7rem; margin: 0; padding: 0; list-style: none; }
+.bottleneck > li { display: grid; grid-template-columns: 2.6rem 1fr; gap: 0 .9rem; background: var(--surface); border: 1px solid var(--line); border-radius: 5px; padding: .95rem 1.15rem; }
+.bottleneck .bi { font-family: var(--font-mono); font-size: .75rem; font-weight: 700; color: var(--alert); background: var(--alert-soft); border-radius: 3px; height: 1.6rem; display: grid; place-content: center; margin-top: .15rem; }
+.bottleneck .bb { display: flex; flex-direction: column; gap: .3rem; }
+.bottleneck h4 { margin: 0; font-size: var(--step-0); font-weight: 700; line-height: 1.6; }
+.bottleneck p { margin: 0; font-size: var(--step--1); color: var(--ink-2); line-height: 1.8; }
+.bottleneck p strong { color: var(--ink); }
+.have { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem,1fr)); gap: .7rem; }
+.have > div { background: var(--safe-soft); border: 1px solid color-mix(in srgb, var(--safe) 25%, transparent); border-radius: 5px; padding: .8rem 1rem; display: flex; flex-direction: column; gap: .2rem; }
+.have h4 { margin: 0; font-size: var(--step--1); font-weight: 700; color: var(--ink); line-height: 1.6; }
+.have p { margin: 0; font-size: var(--step--1); color: var(--ink-2); line-height: 1.75; }
+</style>
+
+
 <div class="wrap">
 
   <header class="masthead">
     <p class="eyebrow">Independent Circle · Vol.3</p>
-    <h1>レーベル型 ──<br>主催者が独立できるサークルの設計</h1>
-    <p class="lede">1000人の実績と青色申告がある前提で、Vol.1・Vol.2 を書き換えます。「自分も利益を得たい」と「主催してくれた人が独立できるようにしたい」は矛盾しません。それどころか、その形にすると<strong>分配より法的に安全な構造</strong>が取れます。</p>
+    <h1>現状からの移行計画 ──<br>レーベル型サークルへ</h1>
+    <p class="lede">月4回・平均13人・1回あたり黒字8,000円。この土台から、主催者が自分のブランドを掲げて独立できる形へどう移すか。すでに動いているもの（Notion運用・note・クローズ会）を捨てずに、そのまま部品として使う計画です。</p>
   </header>
 
   <nav class="toc" aria-label="目次">
     <p class="eyebrow">Contents</p>
     <ol>
-      <li><a href="#s1"><span>01</span>前提の更新 ── 今どこにいるか</a></li>
-      <li><a href="#s2"><span>02</span>目指す形は「レーベル型」</a></li>
-      <li><a href="#s3"><span>03</span>独立までの4段の階段</a></li>
-      <li><a href="#s4"><span>04</span>お金の設計 ── 本体の収入3本</a></li>
-      <li><a href="#s5"><span>05</span>構造の要 ── 誰が集金するか</a></li>
-      <li><a href="#s6"><span>06</span>法的な注意点</a></li>
-      <li><a href="#s7"><span>07</span>最大の経営課題</a></li>
-      <li><a href="#s8"><span>08</span>次の90日</a></li>
+      <li><a href="#s1"><span>01</span>現在地 ── 数字と資産の棚卸し</a></li>
+      <li><a href="#s2"><span>02</span>効いているボトルネック3つ</a></li>
+      <li><a href="#s3"><span>03</span>目指す形は「レーベル型」</a></li>
+      <li><a href="#s4"><span>04</span>移行計画（12ヶ月）</a></li>
+      <li><a href="#s5"><span>05</span>独立までの4段の階段</a></li>
+      <li><a href="#s6"><span>06</span>集金の構造 ── ここだけは間違えない</a></li>
+      <li><a href="#s7"><span>07</span>数字はこう変わる</a></li>
+      <li><a href="#s8"><span>08</span>法的な注意点</a></li>
     </ol>
   </nav>
 
@@ -228,43 +248,169 @@ footer p + p { margin-top: .5rem; }
   <section id="s1">
     <div class="part-head">
       <p class="kicker">Section 01</p>
-      <h2>前提の更新</h2>
+      <h2>現在地</h2>
+      <p>Vol.1・Vol.2 で「まずやること」として書いた項目は、すでに全部終わっています。立ち上げ期ではなく<strong>組織化フェーズの入口</strong>にいます。</p>
     </div>
+
+    <dl class="stat-grid">
+      <div><dt>開催頻度</dt><dd>月4回</dd></div>
+      <div><dt>平均参加者</dt><dd>13<small> 名</small></dd></div>
+      <div><dt>1回あたり粗利</dt><dd>8,000<small> 円</small></dd></div>
+      <div><dt>月間粗利</dt><dd>32,000<small> 円</small></dd></div>
+      <div><dt>年間粗利</dt><dd>約38<small> 万円</small></dd></div>
+      <div><dt>通算参加</dt><dd>約1,000<small> 名</small></dd></div>
+    </dl>
+
+    <h3>すでに持っている資産</h3>
+    <div class="have">
+      <div>
+        <h4>再現性のあるフォーマット</h4>
+        <p>月4回を安定して回せている。平均13人という数字は、集客も進行も型になっている証拠です。<strong>これが一番大きい資産</strong>で、他人に引き継げる形になっています。</p>
+      </div>
+      <div>
+        <h4>Notion での数値管理</h4>
+        <p>確定申告と分析のデータがすでに Notion にある。<strong>ゼロから作る必要はありません。</strong>足りないのは「参加者DB」と「会場台帳」の2つだけです。</p>
+      </div>
+      <div>
+        <h4>note・ブログの発信</h4>
+        <p>定期的に書けている。これは <code>Note-Team</code> の仕組みに乗せれば、そのまま集客とメンバーシップの導線になります。</p>
+      </div>
+      <div>
+        <h4>クローズ会</h4>
+        <p><strong>これが移行の最短路です。</strong>つなげーとの外に、すでに関係のできた人たちのコミュニティがある。次章以降で、ここを起点に組み立てます。</p>
+      </div>
+    </div>
+
     <div class="note ok">
-      <span class="label">完了しているもの</span>
-      <p>Vol.1・Vol.2 で「まずやること」として書いた項目は、すでに終わっています。</p>
-      <ul>
-        <li><strong>1000人規模の開催実績</strong>＝ 需要の検証も、形式の再現性も証明済み。「まず10回開く」は完了</li>
-        <li><strong>青色申告済み</strong>＝ 個人事業主としての器はもう整っている。Vol.2 のフェーズ2は完了</li>
-        <li><strong>集客チャネルが機能している</strong>＝ ゼロから募集を作る段階ではない</li>
-      </ul>
-      <p>つまり<strong>立ち上げ期ではなく、組織化フェーズの入口</strong>にいます。Vol.1 の90日ロードマップと、Vol.2 のフェーズ1〜2は読み飛ばしてください。</p>
+      <span class="label">読み替え</span>
+      <p>Vol.1 の90日ロードマップ、Vol.2 のフェーズ1〜2（任意団体 → 個人事業主）は<strong>完了済みとして読み飛ばしてください。</strong>この Vol.3 が現在の方針です。</p>
     </div>
-    <p class="body">残っている課題は3つに絞られます。<strong>①主催者を育てて増やす仕組み、②その人たちとのお金の設計、③つなげーと依存からの脱却。</strong>以降はこの3つだけを扱います。</p>
   </section>
 
   <!-- 02 -->
   <section id="s2">
     <div class="part-head">
       <p class="kicker">Section 02</p>
-      <h2>目指す形は「レーベル型」</h2>
-      <p>「同じサークルの中で、自分のブランドも掲げられる」「いずれ独立できる」── これは音楽レーベルや美容室ののれん分けと同じ構造で、<strong>ハウス・オブ・ブランズ</strong>と呼ばれる形です。</p>
+      <h2>効いているボトルネック3つ</h2>
+      <p>数字を分解すると、伸びていない理由がはっきり出ます。</p>
     </div>
 
-    <p class="body">親ブランドの下に、各主催者のサブブランドがぶら下がります。<strong>「〈サークル名〉presents ◯◯の会」</strong>のような掲げ方です。参加者から見れば同じサークルの企画、主催者から見れば自分の看板。そして本体は、ブランドと集客基盤とノウハウを提供するプラットフォームになります。</p>
-
-    <div class="note ok">
-      <span class="label">この形が優れている理由</span>
-      <p>Vol.2 の C型（利益分配）では、<strong>本体が主催者に「払う」</strong>構造でした。だから雇用と評価されないよう気を配る必要があった。</p>
-      <p>レーベル型では逆転します。<strong>各主催者が自分の名義で開催し、売上は主催者のもの。本体はブランド使用料・プラットフォーム利用料を「受け取る」側になります。</strong>本体から主催者へのお金の流れが存在しないので、給与認定のリスクが構造ごと消えます。指揮命令の問題も起きません。むしろ本体は主催者に対して「サービスを提供する側」です。</p>
-      <p>そして何より、<strong>あなたの理念（独立できる体制）と、法的な安全性と、収益のスケールが同じ方向を向きます。</strong>主催者が伸びるほど本体の手数料収入も伸びる。理念のために利益を諦める必要がありません。</p>
-    </div>
+    <ol class="bottleneck">
+      <li>
+        <div class="bi">01</div>
+        <div class="bb">
+          <h4>収入が自分の稼働時間に100%比例している</h4>
+          <p>月4回で32,000円。準備込みで1回5時間として月20時間なので、<strong>時給に直すと約1,600円</strong>です。ここを増やす方法が「月6回に増やす」しかない状態だと、すぐ頭打ちになります。<strong>回数を増やす方向に走ると、レーベル型は永久に作れません。</strong></p>
+        </div>
+      </li>
+      <li>
+        <div class="bi">02</div>
+        <div class="bb">
+          <h4>1000人という資産が、自分の手元にない</h4>
+          <p>つなげーと側にあります。規約変更・アカウント停止・手数料改定のどれか一つで使えなくなる。そしてレーベル型では、<strong>本体が主催者に提供する「集客導線」の実体が他社のもの</strong>だと、手数料を取る根拠が足元から崩れます。<strong>ただしクローズ会という受け皿の芽はすでにあります。</strong>制度化されていないだけです。</p>
+        </div>
+      </li>
+      <li>
+        <div class="bi">03</div>
+        <div class="bb">
+          <h4>フォーマットが1つしかない</h4>
+          <p>ボードゲーム会の再現性が高いのは強みですが、<strong>ここに新しい主催者を入れても本体と食い合うだけ</strong>です。月4回が月6回になっても、同じ客層の取り合いになる。新しい主催者には<strong>別のフォーマット</strong>（ランチカフェ、カフェ巡りなど）を持たせる必要があります。</p>
+        </div>
+      </li>
+    </ol>
   </section>
 
   <!-- 03 -->
   <section id="s3">
     <div class="part-head">
       <p class="kicker">Section 03</p>
+      <h2>目指す形は「レーベル型」</h2>
+      <p>「同じサークルの中で自分のブランドを掲げられる」「いずれ独立できる」── これは音楽レーベルや美容室ののれん分けと同じ、<strong>ハウス・オブ・ブランズ</strong>という構造です。</p>
+    </div>
+
+    <p class="body">親ブランドの下に各主催者のサブブランドがぶら下がります。<strong>「〈サークル名〉presents ◯◯の会」</strong>という掲げ方。参加者から見れば同じサークルの企画、主催者から見れば自分の看板。本体はブランドと集客基盤とノウハウを提供するプラットフォームになります。</p>
+
+    <div class="note ok">
+      <span class="label">この形が優れている理由</span>
+      <p>Vol.2 の C型（利益分配）では、<strong>本体が主催者に「払う」</strong>構造でした。だから雇用と評価されないよう気を配る必要があった。</p>
+      <p>レーベル型では逆転します。<strong>各主催者が自分の名義で開催し、売上は主催者のもの。本体はブランド使用料を「受け取る」側になります。</strong>本体から主催者へのお金の流れが存在しないので、給与認定のリスクが構造ごと消えます。</p>
+      <p>そして<strong>理念（独立できる体制）と、法的な安全性と、収益のスケールが同じ方向を向きます。</strong>主催者が伸びるほど本体の収入も伸びる。理念のために利益を諦める必要がありません。</p>
+    </div>
+  </section>
+
+  <!-- 04 -->
+  <section id="s4">
+    <div class="part-head">
+      <p class="kicker">Section 04</p>
+      <h2>移行計画</h2>
+      <p>いま動いているものを止めずに、12ヶ月かけて移します。<strong>ボードゲーム会 月4回はそのまま継続</strong>してください。それが原資です。</p>
+    </div>
+
+    <ol class="road">
+      <li>
+        <div class="marker"><span>0</span></div>
+        <div class="body">
+          <p class="when">Month 1 ／ 計測と受け皿</p>
+          <h4>いまある数字と関係を、自分の手元に移す</h4>
+          <ul>
+            <li><strong>損益分岐人数を出す。</strong>参加費と会場費から「何人でトントンか」を確定させる。13人平均のうち何人が余剰なのかが見えると、価格も定員も判断できるようになる</li>
+            <li><strong>LINE公式アカウントを開設し、クローズ会のメンバーから先に入れる。</strong>すでに信頼関係がある人が最初に入るので、立ち上がりが早い。つなげーとの参加者には毎回の締めで案内する</li>
+            <li><strong>Notion に2つのDBを足す。</strong>既存の確定申告・分析用DBはそのまま。追加するのは「参加者DB」（ニックネーム・初参加日・参加回数・主催者レベル）と「会場台帳DB」だけ</li>
+            <li>過去の開催記録から、<strong>複数回来ていて、初参加の人に自分から話しかけている人</strong>をリストアップする</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div class="marker"><span>1</span></div>
+        <div class="body">
+          <p class="when">Month 2–3 ／ クローズ会を練習台にする</p>
+          <h4>すでにあるクローズ会を、主催者を育てる場に変える</h4>
+          <ul>
+            <li><strong>ここが移行の肝です。</strong>クローズ会は参加者が既知で、失敗しても誰も損をしない。<strong>新人主催者の練習台として理想的</strong>です。いきなり公開イベントを任せる必要はありません</li>
+            <li>クローズ会の中で「企画を持ちたい人」を募り、<strong>1人だけ</strong>選んで主担当をやらせる。いきなり3人にしない。最初の一人で制度の穴が全部出ます</li>
+            <li>企画・会場手配・募集文まで本人に書かせ、あなたは添削だけする。ここが Lv.2（共同主催）</li>
+            <li>並行して、Lv.1〜4 の昇格条件と手数料率を文書化する（`finance/profit-share.md`）</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div class="marker"><span>2</span></div>
+        <div class="body">
+          <p class="when">Month 4–6 ／ 2本目のフォーマットとメンバーシップ</p>
+          <h4>1人目を Lv.3 に上げ、収入の柱を1本立てる</h4>
+          <ul>
+            <li><strong>1人目には、ボードゲーム以外のフォーマットを持たせる。</strong>ランチカフェ、カフェ巡りなど。本体と食い合わず、サークル全体の間口も広がる</li>
+            <li>Lv.3 へ昇格。<strong>自分名義の決済アカウントを作ってもらう</strong>ところから始める。集金と原価負担を経験していない人は独立できません</li>
+            <li><strong>メンバーシップを開始する。</strong>月額500〜1,500円で、全レーベルのイベントに優先予約・割引。1000人のリーチがあるので、ここは今すぐ狙える</li>
+            <li>覚書の雛形を作り、専門家に一度見てもらう。イベント保険を本体で一括手配する</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div class="marker"><span>3</span></div>
+        <div class="body">
+          <p class="when">Month 7–12 ／ 横に増やす</p>
+          <h4>2〜3人目を入れ、自分の開催を減らす</h4>
+          <ul>
+            <li>同じ手順で2人目・3人目。1人目が回っているという実績が、次の人を口説く最大の材料になる</li>
+            <li><strong>自分のボードゲーム会を月4回から月2回に減らす。</strong>ここができて初めて、時間あたりの収入が上がります</li>
+            <li><strong>つなげーと以外からの申込が全体の半分</strong>を目標にする。ここが達成できていないうちは、法人化もレーベル拡大も土台が不安定</li>
+            <li>Lv.3 が2〜3人動き出したら、合同会社の検討を開始する</li>
+          </ul>
+        </div>
+      </li>
+    </ol>
+
+    <div class="note">
+      <span class="label">Notion と Claude Code の使い分け</span>
+      <p>既存の Notion 運用は変えません。<strong>Claude Code 側は「作る」担当、Notion 側は「溜める」担当</strong>と分けます。<code>/event-new</code> が募集文と台本と収支シミュレーションを作って Notion に書き込み、<code>/event-close</code> が実績を Notion に返す。<code>/kpi-monthly</code> は既存DBを読んで集計します。確定申告用のデータ構造はそのまま使えるので、作り直さないでください。</p>
+    </div>
+  </section>
+
+  <!-- 05 -->
+  <section id="s5">
+    <div class="part-head">
+      <p class="kicker">Section 05</p>
       <h2>独立までの4段の階段</h2>
       <p>「独立できる体制」の実体はこれです。<strong>昇格条件を明文化することが最も重要</strong>で、これがないと「なぜあの人だけ」が必ず起きます。</p>
     </div>
@@ -273,92 +419,45 @@ footer p + p { margin-top: .5rem; }
       <li>
         <div class="lv-head"><span class="lv">LV.1</span><h4>当日サポート</h4><span class="money">無報酬＋参加費免除</span></div>
         <div class="lv-body">
-          <p>受付・ファシリなど、当日だけ完結する役割。本体の企画を手伝う立場です。<strong>金銭の報酬は出さず、参加費免除と当日の飲食代・交通費の実費負担まで</strong>に留めます（Vol.1 の A型）。ここで金銭を渡し始めると雇用の議論に入るので、線を引いておきます。</p>
-          <div class="cond"><b>昇格条件</b>3回以上サポートに入り、初参加の人に自分から話しかけている。運営の判断ではなく<strong>行動で見る</strong>。</div>
+          <p>受付・ファシリなど、当日だけ完結する役割。<strong>金銭の報酬は出さず、参加費免除と当日の飲食代・交通費の実費負担まで</strong>に留めます。ここで金銭を渡し始めると雇用の議論に入るので、線を引いておきます。</p>
+          <div class="cond"><b>昇格条件</b>3回以上サポートに入り、初参加の人に自分から話しかけている。運営の主観ではなく<strong>行動で見る</strong>。</div>
         </div>
       </li>
       <li>
-        <div class="lv-head"><span class="lv">LV.2</span><h4>共同主催</h4><span class="money">粗利シェア</span></div>
+        <div class="lv-head"><span class="lv">LV.2</span><h4>共同主催（クローズ会が練習台）</h4><span class="money">粗利シェア</span></div>
         <div class="lv-body">
-          <p>本体の企画で主担当を持ちます。企画・会場手配・募集文まで自分で書く。まだブランドは本体のもので、<strong>売上も本体に立ち、粗利を役割に応じて分配</strong>します（Vol.2 の C型・役割ベース）。ここは<strong>練習台であって、長く置く段ではありません</strong>。1〜3回で次に上げます。</p>
-          <div class="cond"><b>昇格条件</b>主担当で2回開催し、いずれも定員の7割以上を集めた。振り返りを自分で書けている。</div>
+          <p>企画・会場手配・募集文まで自分でやります。まだブランドは本体のもので、<strong>売上も本体に立ち、粗利を役割に応じて分配</strong>します。<strong>クローズ会でやらせるのが最適</strong>で、参加者が既知なので失敗コストが低い。<strong>練習台であって、長く置く段ではありません。</strong>1〜3回で次に上げます。</p>
+          <div class="cond"><b>昇格条件</b>主担当で2回開催し、いずれも定員の7割以上。振り返りを自分で書けている。</div>
         </div>
       </li>
       <li>
         <div class="lv-head"><span class="lv">LV.3</span><h4>レーベル主催</h4><span class="money">自分の売上 − 本体手数料</span></div>
         <div class="lv-body">
-          <p><strong>ここが「自分のブランドを掲げる」段です。</strong>「〈サークル名〉presents ◯◯の会」として、自分の名義で募集し、自分で集金し、会場費も自分で払う。売上はその人のもの。本体には<strong>ブランド使用料・プラットフォーム利用料</strong>を支払います。</p>
-          <p>本体が提供するのは、ブランド、集客導線（SNS・媒体・メンバーシップ）、会場台帳、募集文と台本のテンプレ、保険、トラブル対応のバックアップ。<strong>手数料はこれらの対価</strong>であり、労務の対価ではありません。</p>
-          <div class="cond"><b>昇格条件</b>Lv.2 の条件を満たし、自分でやりたい企画がある。開業届を出す意思がある（年間所得が20万円を超える見込みなら申告が必要になるため）。</div>
+          <p><strong>ここが「自分のブランドを掲げる」段です。</strong>「〈サークル名〉presents ◯◯の会」として自分の名義で募集し、自分で集金し、会場費も自分で払う。売上はその人のもの。本体には<strong>ブランド使用料</strong>を支払います。</p>
+          <p>本体が提供するのは、ブランド、集客導線（LINE公式・SNS・メンバーシップ）、会場台帳、募集文と台本のテンプレ、保険、トラブル対応のバックアップ。<strong>手数料はこれらの対価</strong>であり、労務の対価ではありません。</p>
+          <div class="cond"><b>昇格条件</b>Lv.2 の条件を満たし、<strong>本体と食い合わない自分のフォーマット</strong>がある。開業届を出す意思がある。</div>
         </div>
       </li>
       <li>
         <div class="lv-head"><span class="lv">LV.4</span><h4>独立（のれん分け）</h4><span class="money">卒業 or ライセンス継続</span></div>
         <div class="lv-body">
-          <p>自分のサークルとして分離します。選択肢は2つ。<strong>①完全に卒業してブランドを外す</strong>、<strong>②ブランド使用を継続してライセンス料を払い続ける</strong>。②なら本体には継続収入が残り、独立した側には集客基盤が残ります。どちらを選んでもよい形にしておくのが、この階段の肝です。</p>
-          <div class="cond"><b>移行条件</b>Lv.3 で通算10回以上開催し、自分の集客で定員を埋められている。<strong>競業避止義務は課さない</strong>（後述）。</div>
+          <p>自分のサークルとして分離します。<strong>①完全に卒業してブランドを外す</strong>、<strong>②ブランド使用を継続してライセンス料を払い続ける</strong>の2択。②なら本体には継続収入が残り、独立した側には集客基盤が残ります。<strong>どちらを選んでもよい形にしておくのが、この階段の肝</strong>です。</p>
+          <div class="cond"><b>移行条件</b>Lv.3 で通算10回以上開催し、自分の集客で定員を埋められている。<strong>競業避止義務は課さない</strong>（Section 08）。</div>
         </div>
       </li>
     </ul>
 
     <div class="note">
-      <p><strong>各段に「いつまでに次へ」の目安を置いてください。</strong>Lv.1 に何年もいる人が出ると、階段ではなく身分になります。Lv.1 は半年、Lv.2 は3回まで、を目安に。上がる気がない人はそれでよく、無理に上げる必要はありません。ただし<strong>上がれる道が見えていることと、実際に上がった人が一人でもいることが、この仕組みの信用のすべて</strong>です。</p>
+      <p><strong>各段に「いつまでに次へ」の目安を置いてください。</strong>Lv.1 に何年もいる人が出ると、階段ではなく身分になります。上がる気がない人はそれでよく、無理に上げる必要はありません。ただし<strong>上がれる道が見えていることと、実際に上がった人が一人でもいることが、この仕組みの信用のすべて</strong>です。</p>
     </div>
   </section>
 
-  <!-- 04 -->
-  <section id="s4">
+  <!-- 06 -->
+  <section id="s6">
     <div class="part-head">
-      <p class="kicker">Section 04</p>
-      <h2>お金の設計 ── 本体の収入3本</h2>
-      <p>「自分ももらいたい」への回答です。レーベル型にすると、本体の収入が3本立ちます。</p>
-    </div>
-
-    <div class="rev">
-      <div>
-        <div class="idx">01</div>
-        <div class="rb">
-          <h4>自分が主催する回の粗利</h4>
-          <p>直接収入。これは今もあるもの。ただし<strong>自分の稼働時間に完全に比例するので、ここは増やさない方向</strong>で設計します。主催者が育つほど、あなたは自分の開催数を減らせます。</p>
-        </div>
-      </div>
-      <div>
-        <div class="idx">02</div>
-        <div class="rb">
-          <h4>Lv.3 主催者からの手数料 ── スケールする収入</h4>
-          <p><strong>粗利の10〜20%</strong>が妥当なレンジです。取りすぎると独立の意欲を削ぎ、安すぎると本体が回りません。おすすめは<strong>逓減方式</strong>：Lv.3 開始時は20%、通算10回を超えたら15%、独立準備段階で10%。<strong>伸びた主催者ほど率が下がる</strong>ので、「搾取されている」感が生まれず、理念とも整合します。</p>
-        </div>
-      </div>
-      <div>
-        <div class="idx">03</div>
-        <div class="rb">
-          <h4>横断メンバーシップ ── ここが本命</h4>
-          <p><strong>1000人のリーチがある時点で、これは今すぐ狙えます。</strong>月額500〜1,500円で、全レーベルのイベントに優先予約・割引が効く形。5%が入れば月5万円、10%で月10万円。開催の有無に関係なく入り、しかも<strong>各レーベルの集客力を高めるので、主催者にとっても得</strong>になります。本体だけが儲かる仕組みにしないことが、長く続く条件です。</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="scroller">
-      <table>
-        <thead><tr><th>試算</th><th class="num-cell">現在</th><th class="num-cell">Lv.3 が3人育った状態</th></tr></thead>
-        <tbody>
-          <tr><td>自分の開催（月2回）</td><td class="num-cell">16,000円</td><td class="num-cell">16,000円</td></tr>
-          <tr><td>手数料（3人 × 月2回 × 粗利3万 × 15%）</td><td class="num-cell">—</td><td class="num-cell">27,000円</td></tr>
-          <tr><td>メンバーシップ（50人 × 1,000円）</td><td class="num-cell">—</td><td class="num-cell">50,000円</td></tr>
-          <tr><td><strong>月間合計</strong></td><td class="num-cell"><strong>16,000円</strong></td><td class="num-cell"><strong>93,000円</strong></td></tr>
-          <tr><td>自分の稼働</td><td class="num-cell">月8時間</td><td class="num-cell">月10時間程度</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="body">数字は仮のものですが、構造は正しいはずです。<strong>稼働をほぼ増やさずに収入が5倍以上になる</strong>のは、02と03が自分の時間に比例しないからです。逆に言えば、01を増やす方向に走ると、この構造は作れません。</p>
-  </section>
-
-  <!-- 05 -->
-  <section id="s5">
-    <div class="part-head">
-      <p class="kicker">Section 05</p>
-      <h2>構造の要 ── 誰が集金するか</h2>
-      <p>ここを間違えると、せっかくのレーベル型が C型に逆戻りします。<strong>この文書で一番実務的に重要な箇所です。</strong></p>
+      <p class="kicker">Section 06</p>
+      <h2>集金の構造</h2>
+      <p>ここを間違えると、せっかくのレーベル型が「本体が払う」構造に逆戻りします。<strong>実務的に一番重要な箇所です。</strong></p>
     </div>
 
     <div class="compare">
@@ -367,28 +466,57 @@ footer p + p { margin-top: .5rem; }
         <pre>参加者 → 本体の口座
         ↓
       本体 → 主催者へ送金</pre>
-        <p>本体のPeatixアカウントで全部集めたほうが楽ですが、これをやると<strong>「本体 → 主催者への支払い」</strong>が発生します。せっかく消したはずの給与・外注の議論が戻ってきます。本体の売上も膨らみ、税務上も面倒になります。</p>
+        <p>本体のアカウントで全部集めたほうが楽ですが、これをやると<strong>「本体 → 主催者への支払い」</strong>が発生します。消したはずの給与・外注の議論が戻ってきます。本体の売上も膨らみ、確定申告も面倒になります。</p>
       </div>
       <div class="flow good">
         <h4><span class="pill green">OK</span>主催者が自分で集める</h4>
         <pre>参加者 → 主催者の口座
         ↓
     主催者 → 本体へ手数料</pre>
-        <p>各主催者が自分の決済アカウントを持ち、自分で集金する。本体には手数料を<strong>支払う</strong>。お金の流れが本体から出ていかないので、<strong>雇用の議論が構造的に成立しません。</strong>各自の売上も明確に分かれます。</p>
+        <p>各主催者が自分の決済アカウントを持ち、自分で集金する。本体には手数料を<strong>支払う</strong>。お金が本体から出ていかないので、<strong>雇用の議論が構造的に成立しません。</strong>各自の売上も明確に分かれます。</p>
       </div>
     </div>
 
     <div class="note">
       <span class="label">どうしても本体で集めたい場合</span>
-      <p>決済の利便性を優先して本体アカウントで集めるなら、覚書に<strong>「本体は主催者のために参加費を代理受領する（収納代行）」</strong>と明記し、手数料を差し引いた残額を送金する形にします。この場合、本体が受け取った参加費は<strong>本体の売上ではなく預り金</strong>、本体の売上は手数料部分のみです。会計上もそう処理します。</p>
-      <p>ただし<strong>初手は「主催者が自分で集める」を推奨</strong>します。手間は増えますが、Lv.3 の主催者に「これは自分の事業だ」と実感してもらう効果が大きく、独立への階段としても正しい。集金と原価負担を経験していない人は独立できません。</p>
+      <p>覚書に<strong>「本体は主催者のために参加費を代理受領する（収納代行）」</strong>と明記し、手数料を差し引いた残額を送金します。この場合、本体が受け取った参加費は<strong>本体の売上ではなく預り金</strong>、本体の売上は手数料部分のみ。会計上もそう処理します。</p>
+      <p>ただし<strong>初手は「主催者が自分で集める」を推奨</strong>します。手間は増えますが、「これは自分の事業だ」と実感してもらう効果が大きく、独立への階段としても正しい。</p>
     </div>
   </section>
 
-  <!-- 06 -->
-  <section id="s6">
+  <!-- 07 -->
+  <section id="s7">
     <div class="part-head">
-      <p class="kicker">Section 06</p>
+      <p class="kicker">Section 07</p>
+      <h2>数字はこう変わる</h2>
+      <p>いまの実績値をそのまま使った試算です。</p>
+    </div>
+
+    <div class="scroller">
+      <table>
+        <thead><tr><th>収入源</th><th class="num-cell">現在</th><th class="num-cell">12ヶ月後（Lv.3 が3人）</th></tr></thead>
+        <tbody>
+          <tr><td>自分の開催</td><td class="num-cell">32,000円<br><small>月4回 × 8,000</small></td><td class="num-cell">16,000円<br><small>月2回に減らす</small></td></tr>
+          <tr><td>レーベル手数料</td><td class="num-cell">—</td><td class="num-cell">7,200円<br><small>3人 × 月2回 × 8,000 × 15%</small></td></tr>
+          <tr><td>メンバーシップ</td><td class="num-cell">—</td><td class="num-cell">60,000円<br><small>60名 × 1,000円</small></td></tr>
+          <tr><td><strong>月間合計</strong></td><td class="num-cell"><strong>32,000円</strong></td><td class="num-cell"><strong>83,200円</strong></td></tr>
+          <tr><td>自分の稼働</td><td class="num-cell">月20時間</td><td class="num-cell">月12時間</td></tr>
+          <tr><td><strong>時間あたり</strong></td><td class="num-cell"><strong>1,600円</strong></td><td class="num-cell"><strong>約6,900円</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="note warn">
+      <span class="label">正直に言うと</span>
+      <p><strong>手数料は収益の柱にはなりません。</strong>1回の粗利が8,000円なので、15%取っても1,200円。3人が月2回やっても月7,200円です。手数料の役割は稼ぐことではなく、<strong>①主催者の本気度のフィルター、②ブランドと集客基盤の維持費、③「これはビジネスだ」という共通認識をつくること</strong>の3つだと考えてください。だから<strong>逓減方式</strong>（開始20% → 通算10回で15% → 独立準備で10%）にして、伸びた人ほど率が下がる形にするのが理念とも整合します。</p>
+      <p><strong>実際に効くのはメンバーシップです。</strong>手数料の8倍以上あり、開催の有無に関係なく入り、しかも各レーベルの集客力を高めるので主催者にとっても得になる。<strong>本体だけが儲かる仕組みにしないことが、長く続く条件</strong>です。</p>
+    </div>
+  </section>
+
+  <!-- 08 -->
+  <section id="s8">
+    <div class="part-head">
+      <p class="kicker">Section 08</p>
       <h2>法的な注意点</h2>
       <p>レーベル型はフランチャイズに似た構造なので、そちらの論点を軽く踏みます。重いものはありません。</p>
     </div>
@@ -399,11 +527,11 @@ footer p + p { margin-top: .5rem; }
         <tbody>
           <tr>
             <td><strong>フランチャイズの<br>情報開示義務</strong></td>
-            <td>中小小売商業振興法の開示義務は小売業・飲食業のフランチャイズが対象。<strong>イベント運営は通常該当しません。</strong>ただし、手数料の水準・提供するもの・解除条件を書面で示すこと自体は、信頼のために必ずやってください。</td>
+            <td>中小小売商業振興法の開示義務は小売業・飲食業が対象。<strong>イベント運営は通常該当しません。</strong>ただし手数料の水準・提供するもの・解除条件を書面で示すこと自体は、信頼のために必ずやってください。</td>
           </tr>
           <tr>
             <td><strong>独占禁止法</strong></td>
-            <td>業種を問わず適用されうるので、<strong>過度な拘束をかけないこと</strong>。具体的には ①参加費の額を強制しない（推奨価格を示すのは可、指定は不可）②他所での活動を禁止しない ③会場や仕入先を不合理に指定しない。この3つを守れば実務上問題ありません。</td>
+            <td>業種を問わず適用されうるので<strong>過度な拘束をかけない</strong>。①参加費の額を強制しない（推奨価格を示すのは可）②他所での活動を禁止しない ③会場や仕入先を不合理に指定しない。この3つを守れば実務上問題ありません。</td>
           </tr>
           <tr>
             <td><strong>競業避止義務</strong></td>
@@ -411,98 +539,31 @@ footer p + p { margin-top: .5rem; }
           </tr>
           <tr>
             <td><strong>ブランド名の帰属</strong></td>
-            <td>覚書に<strong>「サークル名およびロゴは本体（代表）に帰属し、使用許諾は本契約の期間中に限る」</strong>と明記。実績が積み上がってきたら<strong>商標登録</strong>も検討に値します（区分にもよりますが数万円規模）。1000人規模なら、名前を守る価値は既にあります。</td>
+            <td>覚書に<strong>「サークル名およびロゴは本体（代表）に帰属し、使用許諾は本契約の期間中に限る」</strong>と明記。1000人規模で他人にブランドを貸す段階に入るなら、<strong>商標登録</strong>も検討に値します（区分次第ですが数万円規模）。</td>
           </tr>
           <tr>
             <td><strong>インボイス・消費税</strong></td>
-            <td>手数料を受け取る側になるため論点になりますが、<strong>主催者側も課税売上1,000万円以下の免税事業者であれば、当面問題になりません。</strong>相手が課税事業者になった段階で再検討します。</td>
+            <td>手数料を受け取る側になりますが、<strong>主催者側も課税売上1,000万円以下の免税事業者であれば当面問題になりません。</strong>相手が課税事業者になった段階で再検討します。</td>
           </tr>
           <tr>
             <td><strong>参加者への責任</strong></td>
-            <td>Lv.3 のイベントで事故があったとき、参加者から見れば「サークルの企画」です。<strong>ブランドを貸す以上、本体も無関係ではいられません。</strong>覚書で一次責任は主催者にあると定めつつ、<strong>イベント保険は本体が一括で手配する</strong>のが現実的です（手数料の対価として説明もつきます）。</td>
+            <td>Lv.3 のイベントで事故があったとき、参加者から見れば「サークルの企画」です。<strong>ブランドを貸す以上、本体も無関係ではいられません。</strong>覚書で一次責任は主催者にあると定めつつ、<strong>イベント保険は本体が一括手配する</strong>のが現実的です（手数料の対価としての説明もつきます）。</td>
+          </tr>
+          <tr>
+            <td><strong>主催者側の申告</strong></td>
+            <td>Lv.2 以降で収入を得る人には、<strong>給与所得者なら年20万円超で確定申告が必要</strong>であることを、お金を渡す前に必ず伝えます。あとから言うと確実に揉めます。本業の副業規定の確認も本人にしてもらいます。</td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <div class="note warn">
-      <p>一般的な情報の整理であり、法的助言ではありません。<strong>手数料を実際に受け取り始める前に、覚書の雛形を一度は弁護士に見てもらってください。</strong>商工会議所や自治体の無料相談でも足ります。1000人規模で、金銭のやり取りが複数人に発生する段階なので、ここは費用をかける価値があります。</p>
-    </div>
-  </section>
-
-  <!-- 07 -->
-  <section id="s7">
-    <div class="part-head">
-      <p class="kicker">Section 07</p>
-      <h2>最大の経営課題</h2>
-    </div>
-    <div class="note warn">
-      <span class="label">つなげーと依存</span>
-      <p><strong>1000人という資産が、いま自分の手元にありません。</strong>プラットフォーム側にあります。規約変更、アカウント停止、手数料改定、サービス終了 ── どれか一つで、積み上げたものが一夜で使えなくなります。これはレーベル型を作るうえでも致命的で、<strong>本体が主催者に提供する「集客導線」の実体が、他社のものだから</strong>です。手数料を取る根拠が足元から崩れます。</p>
-      <p>優先度は最上位です。<strong>つなげーとを捨てる必要はまったくなく、そこから自分の側へ受け皿を作ること</strong>が課題です。</p>
-      <ul>
-        <li><strong>LINE公式アカウント</strong> ── 最も現実的。開催後の告知で友だち追加を促す。プッシュが届く点が強い</li>
-        <li><strong>メンバーシップ</strong> ── 収入と名簿を同時に確保できる（Section 04 の03）</li>
-        <li><strong>Instagram・note</strong> ── 検索と回遊。既存の note チームがそのまま使える</li>
-      </ul>
-      <p>目安として、<strong>1年以内に「つなげーと以外からの申込が全体の半分」</strong>を目指してください。ここが達成できていないうちは、法人化もレーベル拡大も土台が不安定です。</p>
-    </div>
-  </section>
-
-  <!-- 08 -->
-  <section id="s8">
-    <div class="part-head">
-      <p class="kicker">Section 08</p>
-      <h2>次の90日</h2>
-      <p>Vol.1 の90日ロードマップを、この前提で置き換えます。</p>
-    </div>
-    <ol class="road">
-      <li>
-        <div class="marker"><span>1</span></div>
-        <div class="body">
-          <p class="when">Month 1 ／ 受け皿</p>
-          <h4>自分の集客導線を作る</h4>
-          <ul>
-            <li>LINE公式アカウントを開設し、既存参加者に案内する導線を毎回の締めに組み込む</li>
-            <li>メンバーシップの設計（価格・特典・プラットフォーム）を決める。まだ開始しなくてよい</li>
-            <li>過去の開催記録を `events/` に遡って整理する ── <strong>Lv.3 候補を探すための元データになる</strong></li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div class="marker"><span>2</span></div>
-        <div class="body">
-          <p class="when">Month 2 ／ 制度</p>
-          <h4>階段と覚書を作り、最初の一人に声をかける</h4>
-          <ul>
-            <li>Lv.1〜4 の昇格条件と手数料率を文書化する（`finance/profit-share.md` を書き換える）</li>
-            <li>覚書の雛形を作り、専門家に一度見てもらう</li>
-            <li><strong>Lv.2 の候補を1人選んで声をかける。</strong>いきなり3人にしない。最初の一人で制度の穴が全部出ます</li>
-            <li>イベント保険を本体で手配する</li>
-          </ul>
-        </div>
-      </li>
-      <li>
-        <div class="marker"><span>3</span></div>
-        <div class="body">
-          <p class="when">Month 3 ／ 実装</p>
-          <h4>Lv.2 で2回まわし、Lv.3 に上げる</h4>
-          <ul>
-            <li>共同主催で2回開催。募集文と台本を本人に書かせ、あなたは添削だけする</li>
-            <li>問題なければ Lv.3 へ。<strong>自分名義の決済アカウントを作ってもらう</strong>ところから始める</li>
-            <li>メンバーシップを開始する</li>
-            <li>1人目が回り始めたら、同じ手順で2人目へ</li>
-          </ul>
-        </div>
-      </li>
-    </ol>
-    <div class="note ok">
-      <p><strong>法人化の検討は、Lv.3 が2〜3人動き出してからで十分です。</strong>そのとき初めて「複数人と継続的に契約を結ぶ主体」としての法人格に意味が出ます。今の段階では、青色申告済みの個人事業主で何ら困りません。</p>
+      <p>一般的な情報の整理であり、法的・税務的助言ではありません。<strong>手数料を実際に受け取り始める前に、覚書の雛形を一度は専門家に見てもらってください。</strong>商工会議所や自治体の無料相談でも足ります。複数人に金銭のやり取りが発生する段階なので、ここは費用をかける価値があります。</p>
     </div>
   </section>
 
   <footer>
-    <p>Vol.1（決定事項リストと法務メモ）、Vol.2（体制と Claude Code 運用設計）の続編です。1000人規模の開催実績と青色申告済みという前提で、Vol.1 の90日ロードマップと Vol.2 のフェーズ1〜2を置き換えています。</p>
+    <p>Vol.1（決定事項リストと法務メモ）、Vol.2（体制と Claude Code 運用設計）の続編であり、現在の方針です。月4回・平均13人・1回あたり黒字8,000円・通算1000人・青色申告済み・Notion運用中・note発信中・クローズ会あり、という現状を前提に、Vol.1 の90日ロードマップと Vol.2 のフェーズ1〜2を置き換えています。</p>
     <p>法務・税務の記述は一般的な情報の整理であり、法的・税務的助言ではありません。</p>
   </footer>
 
