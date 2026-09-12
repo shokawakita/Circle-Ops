@@ -15,3 +15,10 @@ events/YYYY-MM-DD-slug/
 `/event-close` を使えば `pl.md` の確定と `retro.md` の記入まで進みます。
 
 命名例: `events/2026-09-13-boardgame-yokohama/`
+
+## `_ideas/`
+
+開催日や会場がまだ決まっていない企画の検討メモを置きます。
+固まったら `_template/` を複製してイベントのディレクトリを作り、中身を移してください。
+
+- `_ideas/matsuri-yatai.md` — 祭りでの屋台出店。出店ルート・許可の整理・屋台案
