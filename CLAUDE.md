@@ -50,6 +50,8 @@ Claude Code はここを作業の起点として、イベント設計・告知�
 | `events/` | 1イベント1ディレクトリ。`_template/` を複製して使う |
 | `finance/profit-share.md` | 利益分配とレーベル型手数料のルール |
 | `finance/ledger.csv` | 収支台帳 |
+| `scripts/tunagate/` | つなげーと連携。`cli.py check` / `create` / `drafts` / `publish` |
+| `events/_template/notion-page.md` | Notion ページ本文の雛形 |
 | `docs/` | Vol.1 / Vol.2 / **Vol.3（現在の方針・移行計画）** |
 | `docs/notion-event-rules.md` | **Notion イベント作成ルール。作成前に必ず読む** |
 | `docs/tunagate-api.md` | つなげーと外部APIの仕様メモ |
@@ -57,6 +59,7 @@ Claude Code はここを作業の起点として、イベント設計・告知�
 
 ## よく使うコマンド
 
+- `/event-repeat` — つなげーとの既存イベントを日付だけ変えて再作成
 - `/event-new` — 企画から募集文・台本・収支シミュレーションまで一括生成
 - `/event-close` — 開催後の締め。収支確定・振り返り・レポ下書き
 - `/sns-week` — 週次のSNS投稿カレンダー

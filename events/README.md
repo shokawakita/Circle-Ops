@@ -11,6 +11,10 @@ events/YYYY-MM-DD-slug/
 └ retro.md     振り返り（開催後に記入）
 ```
 
+`notion-page.md` は Notion の `TEST_Event_Projects_DB` に作るページ本文の雛形です
+（`events/YYYY-MM-DD-slug/` には置かず、複製して Notion に貼ります）。
+
+`/event-repeat` を使えば、過去のイベントから Notion ページとつなげーとの下書きが作られます。
 `/event-new` を使えばこの一式が自動で作られます。
 `/event-close` を使えば `pl.md` の確定と `retro.md` の記入まで進みます。
 
