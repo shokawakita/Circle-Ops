@@ -1,0 +1,15 @@
+{
+  "_comment": "つなげーとAPI のパラメータ名。仕様が変わったらこのファイルだけ直す。",
+  "circle_id": "circle_id",
+  "title": "event[title]",
+  "event_date": "event[event_date]",
+  "body": "body",
+  "main_image_url": "main_image_url",
+  "plan": {
+    "_unverified": "events_plans[][...] の中のキー名は、公式ドキュメントに expired_at しか記載がない。name / price / capacity は推定のため、最初の1回を実リクエストで確認して直すこと。",
+    "name": "events_plans[][name]",
+    "price": "events_plans[][price]",
+    "capacity": "events_plans[][capacity]",
+    "expired_at": "events_plans[][expired_at]"
+  }
+}
