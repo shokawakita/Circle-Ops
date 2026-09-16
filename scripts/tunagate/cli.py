@@ -114,6 +114,12 @@ def cmd_drafts(args) -> int:
     return 0
 
 
+def cmd_show(args) -> int:
+    _load_dotenv()
+    print(json.dumps(client.Tunagate().get_event(args.id), ensure_ascii=False, indent=2))
+    return 0
+
+
 def cmd_publish(args) -> int:
     _load_dotenv()
     print(json.dumps(client.Tunagate().publish(args.id), ensure_ascii=False, indent=2))
@@ -142,6 +148,10 @@ def main() -> int:
 
     p_drafts = sub.add_parser("drafts", help="下書きの残り枠を数える")
     p_drafts.set_defaults(func=cmd_drafts)
+
+    p_show = sub.add_parser("show", help="既存イベントの詳細を取得する（読み取りのみ）")
+    p_show.add_argument("--id", required=True, help="つなげーとのイベントID")
+    p_show.set_defaults(func=cmd_show)
 
     p_publish = sub.add_parser("publish", help="公開する（人の確認後にのみ使う）")
     p_publish.add_argument("--id", required=True)
