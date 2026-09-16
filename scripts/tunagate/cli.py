@@ -2,8 +2,9 @@
 """つなげーと連携のコマンド。
 
   python3 scripts/tunagate/cli.py check   --body-file <md> --event-date <ISO>
-  python3 scripts/tunagate/cli.py create  --body-file <md> --event-date <ISO> [--dry-run]
+  python3 scripts/tunagate/cli.py create  --body-file <md> --event-date <ISO> [--event-end-date <ISO>] [--dry-run]
   python3 scripts/tunagate/cli.py drafts
+  python3 scripts/tunagate/cli.py show    --id <id>
   python3 scripts/tunagate/cli.py publish --id <id>
 
 check と create --dry-run はトークン不要（ネットワークに出ない。画像確認を除く）。
@@ -59,6 +60,11 @@ def cmd_check(args) -> int:
 
     print(f"募集タイトル: {ov.title or '(なし)'}")
     print(f"定員        : {ov.capacity if ov.capacity is not None else '(なし)'}")
+    print(f"場所        : {ov.place or '(なし)'}")
+    print(f"会場詳細    : {ov.place_detail or '(なし)'}")
+    print(f"都道府県    : {ov.prefecture or '(なし)'}")
+    print(f"最小催行人数: {ov.min_num_of_people if ov.min_num_of_people is not None else '(なし)'}")
+    print(f"申込締切    : {ov.application_due_date or '(なし)'}")
     print(f"チケット    : {len(ov.plans)} 件")
     for p in ov.plans:
         limit = f" / 期限 {p.expired_at}" if p.expired_at else ""
@@ -91,7 +97,9 @@ def cmd_create(args) -> int:
         print(f"  [注意] {w}")
 
     circle_id = os.environ.get("TUNAGATE_CIRCLE_ID", "")
-    params = client.build_params(ov, args.event_date, circle_id=circle_id)
+    params = client.build_params(
+        ov, args.event_date, circle_id=circle_id, event_end_date=args.event_end_date
+    )
 
     if args.dry_run:
         print("--- 送信するパラメータ（dry-run。実際には送りません） ---")
@@ -143,6 +151,9 @@ def main() -> int:
     p_create = sub.add_parser("create", help="チェックを通れば下書きを作成する")
     add_body_args(p_create)
     p_create.add_argument("--event-date", required=True, help="開催日時 ISO 8601")
+    p_create.add_argument(
+        "--event-end-date", help="終了日時 ISO 8601（省略可・未検証フィールド）"
+    )
     p_create.add_argument("--dry-run", action="store_true", help="送信せずパラメータだけ出す")
     p_create.set_defaults(func=cmd_create)
 

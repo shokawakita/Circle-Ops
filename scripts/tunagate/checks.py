@@ -64,11 +64,21 @@ def run(
     else:
         total = sum(p.capacity for p in ov.plans if p.capacity is not None)
         if ov.capacity is not None and total and total != ov.capacity:
-            errors.append(
+            # 2026-09-16: 実データ（594081）で全体定員20名・チケット定員合計26名という
+            # 一致しない例を確認済み。早割系チケットが埋まると閉じる設計のため、
+            # 合計が全体定員を上回ること自体は正常。止めずに注意のみ表示する。
+            warnings.append(
                 f"チケット定員の合計 {total} 名が【定員】{ov.capacity} 名と一致しません"
+                "（早割チケットの重複販売などで一致しないのは正常な場合があります）"
             )
         if any(p.price == 0 for p in ov.plans) and any(p.price > 0 for p in ov.plans):
             warnings.append("無料のチケットと有料のチケットが混在しています")
+
+    if ov.prefecture and ov.prefecture not in ("東京都", "神奈川県"):
+        warnings.append(
+            f"【都道府県】「{ov.prefecture}」は pref_id の対応表（client.PREFECTURE_IDS）に無く、"
+            "pref_id は送信されません"
+        )
 
     if ov.image_url and check_image:
         ok, detail = image_reachable(ov.image_url)

@@ -23,8 +23,11 @@ python3 scripts/tunagate/cli.py create --body-file <md> --event-date 2026-10-12T
 # チェックを通れば下書きを作成（公開はしない）
 python3 scripts/tunagate/cli.py create --body-file <md> --event-date 2026-10-12T14:00:00
 
-# 下書きの残り枠
+# 下書きの残り枠（※ 下記「未検証の箇所」参照。過小報告する可能性あり）
 python3 scripts/tunagate/cli.py drafts
+
+# 既存イベントの詳細を取得（読み取りのみ。Notion本文が空でもつなげーと側の実データを確認できる）
+python3 scripts/tunagate/cli.py show --id 594081
 
 # 公開（人が内容を確認したあとにのみ）
 python3 scripts/tunagate/cli.py publish --id 456
@@ -56,3 +59,19 @@ python3 -m unittest discover -s tests
 最初の1回は必ず `--dry-run` で送信内容を確認し、実際に作成したあとに
 つなげーとの編集画面でチケットが意図どおり入っているかを見てください。
 違っていれば `field_map.json` だけ直せば済みます。
+
+### `drafts` コマンドは下書き数を過小報告する可能性がある（2026-09-16 発見）
+
+`GET /api/external/events` の一覧レスポンスを実際に全件確認したところ、
+**下書きが1件も含まれていなかった**（135件全件 `status: "published"`）。
+`count_drafts()` はこの一覧を数えて下書き数を判定しているため、
+**常に0件と報告し続ける可能性が高い。** 下書き数の正確な把握は、
+つなげーとの管理画面で直接確認すること。詳細は `docs/tunagate-api.md` を参照。
+
+### `capacity`（イベント全体の定員）など、まだ送信していないフィールドがある
+
+`GET /api/external/events/:id`（`show` コマンド）で実イベントを取得すると、
+`place` / `place_detail` / `pref_id` / `capacity`（イベント全体）/ `min_num_of_people` /
+`application_due_date` / `event_end_datetime` など、このリポジトリの `create` が
+**まだ送信していないフィールド**が複数見つかった。詳細と対応状況は `docs/tunagate-api.md`
+の「未対応・要検証のフィールド」を参照。

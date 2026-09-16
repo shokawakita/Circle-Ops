@@ -17,6 +17,14 @@ FIELD_MAP = json.loads((pathlib.Path(__file__).with_name("field_map.json")).read
 
 PAGE_SIZE = 50  # 一覧は1ページ50件固定
 
+# 都道府県名 → pref_id。JIS X 0401 の都道府県コードを仮定している。
+# 実データで確認できたのは 13（東京都）のみ。他の値は未検証。
+# サークルの活動エリア（神奈川・東京）に絞って必要な分だけ持つ（docs/tunagate-api.md 参照）。
+PREFECTURE_IDS = {
+    "東京都": 13,
+    "神奈川県": 14,
+}
+
 
 class TunagateError(RuntimeError):
     def __init__(self, status: int, message: str):
@@ -121,22 +129,49 @@ def count_drafts(client: Tunagate) -> int:
         page += 1
 
 
-def build_params(ov, event_date: str, circle_id: str | None = None) -> list[tuple[str, str]]:
+def build_params(
+    ov,
+    event_date: str,
+    circle_id: str | None = None,
+    event_end_date: str | None = None,
+) -> list[tuple[str, str]]:
     """Overview からフォームエンコード用のパラメータ列を作る。
 
     events_plans[] は「1件分のキーをまとめて並べる」順序で出す。
     途中で順序を崩すとプランの対応が壊れる。
+
+    capacity / place / place_detail / pref_id / min_num_of_people /
+    application_due_date / event_end_datetime は 2026-09-16 に追加した
+    未検証フィールド（field_map.json の _unverified_fields）。
+    キー名が違っていた場合は反映されないだけで、他のフィールドには影響しない想定。
     """
     fm = FIELD_MAP
+    uf = fm["_unverified_fields"]
     params: list[tuple[str, str]] = []
     if circle_id:
         params.append((fm["circle_id"], str(circle_id)))
     params.append((fm["title"], ov.title or ""))
     params.append((fm["event_date"], event_date))
+    if event_end_date:
+        params.append((uf["event_end_datetime"], event_end_date))
     if ov.body:
         params.append((fm["body"], ov.body))
     if ov.image_url:
         params.append((fm["main_image_url"], ov.image_url))
+    if ov.capacity is not None:
+        params.append((uf["capacity"], str(ov.capacity)))
+    if ov.place:
+        params.append((uf["place"], ov.place))
+    if ov.place_detail:
+        params.append((uf["place_detail"], ov.place_detail))
+    if ov.prefecture:
+        pref_id = PREFECTURE_IDS.get(ov.prefecture)
+        if pref_id is not None:
+            params.append((uf["pref_id"], str(pref_id)))
+    if ov.min_num_of_people is not None:
+        params.append((uf["min_num_of_people"], str(ov.min_num_of_people)))
+    if ov.application_due_date:
+        params.append((uf["application_due_date"], ov.application_due_date))
 
     plan_keys = fm["plan"]
     for plan in ov.plans:

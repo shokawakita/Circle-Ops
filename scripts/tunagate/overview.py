@@ -15,6 +15,11 @@ KEY_TITLE = "【募集タイトル】"
 KEY_IMAGE = "【メイン画像】"
 KEY_CAPACITY = "【定員】"
 KEY_PRICE = "【参加費】"
+KEY_PLACE = "【場所】"
+KEY_PLACE_DETAIL = "【会場詳細】"
+KEY_PREFECTURE = "【都道府県】"
+KEY_MIN_PEOPLE = "【最小催行人数】"
+KEY_APPLICATION_DUE = "【申込締切】"
 
 HEADING_OVERVIEW = "イベント概要"
 HEADING_BODY = "募集本文"
@@ -35,6 +40,11 @@ class Overview:
     title: str | None = None
     image_url: str | None = None
     capacity: int | None = None
+    place: str | None = None
+    place_detail: str | None = None
+    prefecture: str | None = None
+    min_num_of_people: int | None = None
+    application_due_date: str | None = None
     plans: list[Plan] = field(default_factory=list)
     body: str | None = None
     errors: list[str] = field(default_factory=list)
@@ -223,6 +233,27 @@ def parse(markdown: str) -> Overview:
         result.errors.append(f"{KEY_CAPACITY} が TODO: のままです")
     else:
         result.capacity = _to_int(capacity_raw, KEY_CAPACITY, result.errors)
+
+    # 以下は任意項目。未検証フィールドのため、省略してもエラーにしない（docs/tunagate-api.md 参照）
+    place = _inline_value(overview, KEY_PLACE)
+    if place and not _is_todo(place):
+        result.place = place
+
+    place_detail = _inline_value(overview, KEY_PLACE_DETAIL)
+    if place_detail and not _is_todo(place_detail):
+        result.place_detail = place_detail
+
+    prefecture = _inline_value(overview, KEY_PREFECTURE)
+    if prefecture and not _is_todo(prefecture):
+        result.prefecture = prefecture
+
+    min_people_raw = _inline_value(overview, KEY_MIN_PEOPLE)
+    if min_people_raw and not _is_todo(min_people_raw):
+        result.min_num_of_people = _to_int(min_people_raw, KEY_MIN_PEOPLE, result.errors)
+
+    due_raw = _inline_value(overview, KEY_APPLICATION_DUE)
+    if due_raw and not _is_todo(due_raw):
+        result.application_due_date = _to_datetime(due_raw, KEY_APPLICATION_DUE, result.errors)
 
     result.plans = _parse_table(overview, result.errors)
 
