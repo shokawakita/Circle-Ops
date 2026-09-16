@@ -51,10 +51,11 @@ Claude Code はここを作業の起点として、イベント設計・告知�
 | `finance/profit-share.md` | 利益分配とレーベル型手数料のルール |
 | `finance/ledger.csv` | 収支台帳 |
 | `scripts/tunagate/` | つなげーと連携。`cli.py check` / `create` / `drafts` / `publish` |
-| `events/_template/notion-page.md` | Notion ページ本文の雛形 |
+| `events/_template/notion-page.md` | つなげーとAPIに送る内容を組み立てる**一時ファイル**の雛形（Notionページ本文には保存しない。`docs/notion-event-rules.md` 6.5） |
 | `docs/` | Vol.1 / Vol.2 / **Vol.3（現在の方針・移行計画）** |
 | `docs/notion-event-rules.md` | **Notion イベント作成ルール。作成前に必ず読む** |
 | `docs/tunagate-api.md` | つなげーと外部APIの仕様メモ |
+| `docs/tunagate-event-schema.md` | つなげーとイベントの各プロパティの型・桁数・意味の一覧 |
 | `docs/automation-plan.md` | イベント作成の自動化プラン（提案） |
 
 ## よく使うコマンド

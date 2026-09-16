@@ -11,5 +11,15 @@
     "price": "events_plans[][price]",
     "capacity": "events_plans[][capacity]",
     "expired_at": "events_plans[][expired_at]"
+  },
+  "_unverified_fields": {
+    "_comment": "2026-09-16、GET /api/external/events/:id のレスポンスに存在を確認したが、POST/PATCH でのキー名は未検証。event[title] / event[event_date] と同じ event[...] のネスト規則を仮定している。実際に送って反映を確認してから使うこと。詳細は docs/tunagate-api.md の「未対応・要検証のフィールド」。",
+    "capacity": "event[capacity]",
+    "place": "event[place]",
+    "place_detail": "event[place_detail]",
+    "pref_id": "event[pref_id]",
+    "min_num_of_people": "event[min_num_of_people]",
+    "application_due_date": "event[application_due_date]",
+    "event_end_datetime": "event[event_end_datetime]"
   }
 }
