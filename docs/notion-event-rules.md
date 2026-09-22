@@ -179,14 +179,21 @@ check` / `create` の `--body-file` に渡すためだけに使い、**Notionに
 `参加窓口` のURLからイベントIDを取り、`scripts/tunagate/cli.py show --id <id>` で
 つなげーと側から直接確認します。フィールドの意味は `docs/tunagate-event-schema.md`。
 
+**例外: 身内イベント（`/event-private`）はこの方針の対象外です。** つなげーとを経由しないため
+公開ページが存在せず、Notionページ本文そのものが参加者向けの案内になります。日時・場所・
+参加費（固定額）・注意事項・キャンセルポリシーを本文にフルで書きます。詳細は
+`.claude/skills/event-private/SKILL.md`。
+
 ---
 
 ## 7. 据え置き（TODO）
 
 | 項目 | 状態 |
 |---|---|
-| 身内イベントの手順 | 未ヒアリング |
 | 協賛金申請フォームのURLと設問 | 未共有。prefill URL の生成に必要 |
+
+身内イベントの手順は `/event-private`（`.claude/skills/event-private/SKILL.md`）として運用開始。
+ただし `確定申告判定` の扱いなど、実運用で見えてくる部分は今後調整の可能性あり。
 
 ## 8. やらないこと
 
