@@ -11,7 +11,9 @@ import urllib.error
 import urllib.request
 from dataclasses import dataclass
 
-DRAFT_LIMIT = 10
+# 2026-09-25: 下書き上限（10件）は運営側で撤廃済み（docs/tunagate-api.md）。
+# 件数はもう作成の可否に関係しないため、DRAFT_LIMIT による判定は行わない。
+# count_drafts() は不要な下書きを掃除する判断材料としてのみ使う。
 
 # brand/voice.md の「使わない言葉」より
 NG_WORDS = ["恋活", "婚活", "出会い", "絶対に", "必ず", "100%", "ハイスペック"]
@@ -53,10 +55,11 @@ def run(
     errors: list[str] = list(ov.errors)
     warnings: list[str] = []
 
-    if draft_count is not None and draft_count >= DRAFT_LIMIT:
-        errors.append(
-            f"下書きが {draft_count} 件あり、上限 {DRAFT_LIMIT} 件に達しています。"
-            "不要な下書きを消してから作成してください（超えると 422）"
+    if draft_count is not None and draft_count >= 50:
+        warnings.append(
+            f"下書きが {draft_count} 件あります（上限は撤廃済みのため作成はブロックしません）。"
+            "空タイトルの自動生成データが溜まっている可能性があるため、"
+            "気になるならつなげーとの管理画面で整理してください"
         )
 
     if not ov.plans:
@@ -97,10 +100,12 @@ def run(
         if "キャンセル" not in body:
             errors.append("募集本文にキャンセルポリシーがありません（brand/rules.md）")
 
-        if not re.search(r"\d{2}\s*歳", body):
-            errors.append("募集本文に対象年齢の記載がありません（brand/rules.md）")
-        elif any(w in body for w in ALCOHOL_WORDS) and "20歳" not in _normalize_age(body):
-            errors.append("飲酒を伴う回は対象を20歳以上にしてください（brand/rules.md）")
+        # 2026-09-26: 対象年齢はつなげーと側の設定（申込時のチェック）で管理するため、
+        # 募集本文への記載は不要になった（運営確認済み）。本文チェックの対象からは外すが、
+        # 飲酒を伴う回で20歳未満を対象にしてしまわないよう、本文に年齢の記載がある場合だけ
+        # 矛盾を警告する。
+        if re.search(r"\d{2}\s*歳", body) and any(w in body for w in ALCOHOL_WORDS) and "20歳" not in _normalize_age(body):
+            warnings.append("飲酒を伴う回は対象を20歳以上にしてください（brand/rules.md）")
 
         if "勧誘" not in body:
             warnings.append("募集本文に勧誘禁止の記載が見当たりません（brand/rules.md）")

@@ -37,7 +37,9 @@ def _explain(status: int, message: str) -> str:
     hints = {
         401: "トークンが無効・失効・期限切れです。.env の TUNAGATE_API_TOKEN を確認してください",
         404: "権限が無いか、対象が存在しません（APIはこの2つを区別しません）",
-        422: "入力エラー、下書き上限（10件）超過、または公開条件未達です",
+        # 2026-09-25: 下書き上限（10件）は運営側で撤廃済み（docs/tunagate-api.md 参照）。
+        # 古いヒントを出し続けないよう更新。
+        422: "入力エラー、または公開条件未達です",
     }
     hint = hints.get(status)
     return f"{message}（{hint}）" if hint else message
@@ -82,10 +84,12 @@ class Tunagate:
 
     # ---- エンドポイント -------------------------------------------------
 
-    def list_events(self, page: int = 1):
-        return self._request(
-            "GET", "/events", [("circle_id", self.circle_id), ("page", str(page))]
-        )
+    def list_events(self, page: int = 1, *, include_drafts: bool = False):
+        params = [("circle_id", self.circle_id), ("page", str(page))]
+        if include_drafts:
+            # 2026-09-25判明: これを付けないと下書きが1件も返らない（docs/tunagate-api.md）。
+            params.append(("include_drafts", "true"))
+        return self._request("GET", "/events", params)
 
     def get_event(self, event_id: str | int):
         return self._request("GET", f"/events/{event_id}")
@@ -114,11 +118,17 @@ def _events(payload) -> list:
 
 
 def count_drafts(client: Tunagate) -> int:
-    """下書きの件数を数える。上限10件に達していると新規作成が 422 で落ちるため。"""
+    """下書きの件数を数える。
+
+    2026-09-25判明: 下書き上限（10件）自体は運営側で撤廃済みなので、この関数は
+    もう作成の可否を左右しない。不要な下書きを掃除する判断材料として残している。
+    `include_drafts=true` を付けないと一覧に下書きが1件も含まれない
+    （docs/tunagate-api.md 参照）。
+    """
     total = 0
     page = 1
     while True:
-        events = _events(client.list_events(page=page))
+        events = _events(client.list_events(page=page, include_drafts=True))
         for ev in events:
             status = str(ev.get("status") or ev.get("state") or "").lower()
             published = ev.get("published_at") or ev.get("published")

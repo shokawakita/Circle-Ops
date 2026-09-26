@@ -70,7 +70,7 @@ def cmd_check(args) -> int:
         limit = f" / 期限 {p.expired_at}" if p.expired_at else ""
         print(f"  - {p.name}: {p.price}円 / {p.capacity}名{limit}")
     if draft_count is not None:
-        print(f"下書き      : {draft_count} / {checks.DRAFT_LIMIT} 件")
+        print(f"下書き      : {draft_count} 件（上限は撤廃済み）")
 
     _report(result)
     if result.ok:
@@ -118,7 +118,7 @@ def cmd_create(args) -> int:
 def cmd_drafts(args) -> int:
     _load_dotenv()
     c = client.Tunagate()
-    print(f"下書き: {client.count_drafts(c)} / {checks.DRAFT_LIMIT} 件")
+    print(f"下書き: {client.count_drafts(c)} 件（上限は撤廃済み）")
     return 0
 
 
