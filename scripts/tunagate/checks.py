@@ -97,10 +97,12 @@ def run(
         if "キャンセル" not in body:
             errors.append("募集本文にキャンセルポリシーがありません（brand/rules.md）")
 
-        if not re.search(r"\d{2}\s*歳", body):
-            errors.append("募集本文に対象年齢の記載がありません（brand/rules.md）")
-        elif any(w in body for w in ALCOHOL_WORDS) and "20歳" not in _normalize_age(body):
-            errors.append("飲酒を伴う回は対象を20歳以上にしてください（brand/rules.md）")
+        # 2026-09-26: 対象年齢はつなげーと側の設定（申込時のチェック）で管理するため、
+        # 募集本文への記載は不要になった（運営確認済み）。本文チェックの対象からは外すが、
+        # 飲酒を伴う回で20歳未満を対象にしてしまわないよう、本文に年齢の記載がある場合だけ
+        # 矛盾を警告する。
+        if re.search(r"\d{2}\s*歳", body) and any(w in body for w in ALCOHOL_WORDS) and "20歳" not in _normalize_age(body):
+            warnings.append("飲酒を伴う回は対象を20歳以上にしてください（brand/rules.md）")
 
         if "勧誘" not in body:
             warnings.append("募集本文に勧誘禁止の記載が見当たりません（brand/rules.md）")

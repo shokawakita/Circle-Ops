@@ -110,7 +110,7 @@ python3 scripts/tunagate/cli.py create --body-file <path> --event-date <ISO8601>
 
 - つなげーとの下書きURL
 - Notion のページURL
-- **人がやること**: ①下書きの内容確認 ②公開ボタン ③（日本酒なら）Threads投稿
+- **人がやること**: ①下書きの内容確認 ②キャンセルポリシー・サブ画像・チケットの説明文の設定（外部APIが未対応のため、つなげーとの編集画面で手動設定。`docs/tunagate-api.md` の「外部APIが対応していない項目」参照） ③公開ボタン ④（日本酒なら）Threads投稿
 
 ## 守ること
 
