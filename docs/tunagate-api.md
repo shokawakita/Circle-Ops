@@ -90,10 +90,13 @@ export TUNAGATE_API_TOKEN=tg_xxxxxxxxxxxxxxxxxxxxxxxx
 
 ### プラン（`events_plans[]`）内
 
-GETレスポンスでのキー名は `write` 側（`events_plans[][...]`）と**同じとは限らない**点に注意。
-例えば GET では価格が `creator_price`、プラン名が `plan` という名前で返ってくるが、
-`field_map.json` の write 側はそれぞれ `events_plans[][price]` / `events_plans[][name]`（推定）を使っている。
-読み取り用と書き込み用でキー名が違う設計である可能性が高い。
+**2026-09-25 実リクエストで検証済み: 書き込み側のキー名もGETレスポンスと同じ `plan` / `creator_price` だった。**
+当初は `events_plans[][name]` / `events_plans[][price]`（推定）としていたが、これは誤りで、
+実際に送っても無視され、`plan: ""` `creator_price: 0` の空チケットが作成されるだけだった
+（`capacity` は推定どおり `events_plans[][capacity]` で正しく反映されていた）。
+検証はサークル97956・event 620449（下書き）で実施し、`events_plans[][plan]` /
+`events_plans[][creator_price]` に修正後、PATCHで正しく反映されることを確認した。
+`field_map.json` は修正済み。
 
 | フィールド（GETレスポンス上の名前） | 内容 | 現状 |
 |---|---|---|
