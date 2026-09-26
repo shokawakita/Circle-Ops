@@ -11,7 +11,9 @@ import urllib.error
 import urllib.request
 from dataclasses import dataclass
 
-DRAFT_LIMIT = 10
+# 2026-09-25: 下書き上限（10件）は運営側で撤廃済み（docs/tunagate-api.md）。
+# 件数はもう作成の可否に関係しないため、DRAFT_LIMIT による判定は行わない。
+# count_drafts() は不要な下書きを掃除する判断材料としてのみ使う。
 
 # brand/voice.md の「使わない言葉」より
 NG_WORDS = ["恋活", "婚活", "出会い", "絶対に", "必ず", "100%", "ハイスペック"]
@@ -53,10 +55,11 @@ def run(
     errors: list[str] = list(ov.errors)
     warnings: list[str] = []
 
-    if draft_count is not None and draft_count >= DRAFT_LIMIT:
-        errors.append(
-            f"下書きが {draft_count} 件あり、上限 {DRAFT_LIMIT} 件に達しています。"
-            "不要な下書きを消してから作成してください（超えると 422）"
+    if draft_count is not None and draft_count >= 50:
+        warnings.append(
+            f"下書きが {draft_count} 件あります（上限は撤廃済みのため作成はブロックしません）。"
+            "空タイトルの自動生成データが溜まっている可能性があるため、"
+            "気になるならつなげーとの管理画面で整理してください"
         )
 
     if not ov.plans:
